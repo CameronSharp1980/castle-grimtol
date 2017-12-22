@@ -5,6 +5,7 @@ namespace CastleGrimtol.Project
 {
     public class Game : IGame
     {
+        bool Quit = false;
         public Room CurrentRoom { get; set; }
 
         public Player CurrentPlayer { get; set; }
@@ -31,9 +32,19 @@ namespace CastleGrimtol.Project
 
         public void Start()
         {
-            Console.WriteLine("Current Room: " + CurrentRoom.Name);
-            Console.WriteLine("Current Score: " + CurrentPlayer.Score);
+            string[] Command;
+            // Console.WriteLine("Current Room: " + CurrentRoom.Name);
+            // Console.WriteLine("Current Score: " + CurrentPlayer.Score);
+            // CurrentRoom = Rooms["Barracks"];
+            // Console.WriteLine("Current Room: " + CurrentRoom.Name);
 
+            while (!Quit)
+            {
+                Look();
+                Command = PromptUser();
+                ParseCommand(Command);
+
+            }
         }
 
         public void UseItem(string itemName)
@@ -41,24 +52,64 @@ namespace CastleGrimtol.Project
 
         }
 
+        private void Look()
+        {
+            Console.WriteLine(CurrentRoom.Description);
+            for (int i = 0; i < CurrentRoom.Items.Count; i++)
+            {
+                Console.WriteLine("You see a " + CurrentRoom.Items[i].Name + " " + CurrentRoom.Items[i].ItemLocation);
+            }
+        }
+
+        private string[] PromptUser()
+        {
+            string CommandString;
+            Console.Write("What would you like to to?: ");
+            CommandString = Console.ReadLine();
+            return CommandString.Split(" ");
+
+        }
+
+        private void ParseCommand(string[] CommandArr)
+        {
+            if (CommandArr[0].ToLower() == "go")
+            {
+                Go(CommandArr[1].ToLower());
+            }
+        }
+
+        private void Go(string Direction)
+        {
+            if (CurrentRoom.Exits.ContainsKey(Direction))
+            {
+                // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
+                CurrentRoom = CurrentRoom.Exits[Direction];
+            }
+        }
 
         private void GenerateRooms()
         {
             // Separate Room generation from exit and item population? (And adding to rooms dictionary?)
-            Room Hallway = new Room("Hallway", "Description comes later");
-            Room Barracks = new Room("Barracks", "Description comes later");
-            Room CastleCourtyard = new Room("Castle Courtyard", "Description comes later");
-            Room CaptainsQuarters = new Room("Captain's Quarters", "Description comes later");
+            Room Hallway = new Room("Hallway", "A room with an exit to the east");
+            Room Barracks = new Room("Barracks", "A room with exits to the east and west");
+            Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west");
+            Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west");
 
-            Hallway.Exits.Add("East", Barracks);
+            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "On the Floor");
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "On a Dais in the center of the room.");
 
-            Barracks.Exits.Add("West", Hallway);
-            Barracks.Exits.Add("East", CastleCourtyard);
+            Hallway.Exits.Add("east", Barracks);
 
-            CastleCourtyard.Exits.Add("West", Barracks);
-            CastleCourtyard.Exits.Add("East", CaptainsQuarters);
+            Barracks.Exits.Add("west", Hallway);
+            Barracks.Exits.Add("east", CastleCourtyard);
 
-            CaptainsQuarters.Exits.Add("West", CastleCourtyard);
+            CastleCourtyard.Exits.Add("west", Barracks);
+            CastleCourtyard.Exits.Add("east", CaptainsQuarters);
+
+            CaptainsQuarters.Exits.Add("west", CastleCourtyard);
+
+            CastleCourtyard.Items.Add(BronzeKey);
+            CastleCourtyard.Items.Add(SilverGoblet);
 
             Rooms.Add("Hallway", Hallway);
             Rooms.Add("Barracks", Barracks);
