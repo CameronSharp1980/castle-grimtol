@@ -15,7 +15,7 @@ namespace CastleGrimtol.Project
 
         public void Setup()
         {
-
+            //re-initialize your Rooms dictionary here? or perhaps in reset?
             //Generate rooms and populate with exits (And items later)
             GenerateRooms();
 
@@ -49,7 +49,8 @@ namespace CastleGrimtol.Project
 
         public void UseItem(string itemName)
         {
-
+            System.Console.WriteLine($"You used the {itemName}");
+            //Use / dispose of item? Use the rooms method?
         }
 
         private void Look()
@@ -63,10 +64,24 @@ namespace CastleGrimtol.Project
 
         private string[] PromptUser()
         {
-            string CommandString;
+            string CommandStringInput;
+            string[] CommandArr;
+            string Command;
+            string CommandArg;
+
             Console.Write("What would you like to to?: ");
-            CommandString = Console.ReadLine();
-            return CommandString.Split(" ");
+            CommandStringInput = Console.ReadLine();
+
+            Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '), (CommandStringInput.Length - 1) - CommandStringInput.IndexOf(' ') + 1);
+            CommandArg = CommandStringInput.Remove(0, CommandStringInput.IndexOf(' ') + 1);
+
+            // if statement to check for existence of spaces?
+            CommandArr = new string[] { Command, CommandArg };
+            // System.Console.WriteLine(CommandArr[0]);
+            // System.Console.WriteLine(CommandArr[1]);
+
+            return CommandArr;
+            // return CommandString.Split(" ");
 
         }
 
@@ -76,14 +91,56 @@ namespace CastleGrimtol.Project
             {
                 Go(CommandArr[1].ToLower());
             }
+            else if (CommandArr[0].ToLower() == "take")
+            {
+                Take(CommandArr[1].ToLower());
+            }
+            else if (CommandArr[0].ToLower() == "use")
+            {
+                for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
+                {
+                    Console.WriteLine(CurrentPlayer.Inventory[i].Name);
+                    if (CurrentPlayer.Inventory[i].Name.ToLower() == CommandArr[1].ToLower())
+                    {
+                        CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
+                    }
+                }
+            }
         }
 
         private void Go(string Direction)
         {
-            if (CurrentRoom.Exits.ContainsKey(Direction))
+            //use switch cases to handle multiple spellings of direction?
+            // check for spaces before split?
+            if (CurrentRoom.Locks.ContainsKey(Direction))
+            {
+                if (CurrentRoom.Locks[Direction].Locked)
+                {
+                    Console.WriteLine($"The door is locked... The lock appears to fit a {CurrentRoom.Locks[Direction].Type}");
+                }
+                else if (CurrentRoom.Exits.ContainsKey(Direction))
+                {
+                    // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
+                    CurrentRoom = CurrentRoom.Exits[Direction];
+                }
+            }
+            else if (CurrentRoom.Exits.ContainsKey(Direction))
             {
                 // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
                 CurrentRoom = CurrentRoom.Exits[Direction];
+            }
+        }
+
+        private void Take(string Item)
+        {
+            for (int i = 0; i < CurrentRoom.Items.Count; i++)
+            {
+                if (CurrentRoom.Items[i].Name.ToLower() == Item.ToLower())
+                {
+                    //No spaces in key names?
+                    CurrentPlayer.Inventory.Add(CurrentRoom.Items[i]);
+                    CurrentRoom.Items.RemoveAt(i);
+                }
             }
         }
 
@@ -98,6 +155,8 @@ namespace CastleGrimtol.Project
             Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "On the Floor");
             Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "On a Dais in the center of the room.");
 
+            Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
+
             Hallway.Exits.Add("east", Barracks);
 
             Barracks.Exits.Add("west", Hallway);
@@ -105,6 +164,8 @@ namespace CastleGrimtol.Project
 
             CastleCourtyard.Exits.Add("west", Barracks);
             CastleCourtyard.Exits.Add("east", CaptainsQuarters);
+
+            CastleCourtyard.Locks.Add("east", BronzeLock);
 
             CaptainsQuarters.Exits.Add("west", CastleCourtyard);
 

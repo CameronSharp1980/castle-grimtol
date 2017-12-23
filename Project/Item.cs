@@ -9,6 +9,8 @@ namespace CastleGrimtol.Project
 
         public string ItemLocation { get; set; }
 
+        public string ItemCommand { get; set; }
+
         public Item(string name, string description, string itemLocation)
         {
             Name = name;

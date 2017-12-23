@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace CastleGrimtol.Project
@@ -10,11 +11,26 @@ namespace CastleGrimtol.Project
 
         public Dictionary<string, Room> Exits { get; set; }
 
+        public Dictionary<string, Lock> Locks { get; set; }
+
         public List<Item> Items { get; set; }
 
         public void UseItem(Item item)
         {
+            if (item.Name.ToLower().Contains("key"))
+            {
+                // System.Console.WriteLine("key test");
+                foreach (var lockToCheck in Locks)
+                {
+                    if (lockToCheck.Value.Type == item.Name)
+                    {
+                        Console.WriteLine($"Used {item.Name}.");
+                        lockToCheck.Value.Locked = false;
+                    }
+                }
 
+
+            }
         }
 
         public Room(string name, string description)
@@ -22,6 +38,7 @@ namespace CastleGrimtol.Project
             Name = name;
             Description = description;
             Exits = new Dictionary<string, Room>();
+            Locks = new Dictionary<string, Lock>();
             Items = new List<Item>();
         }
     }
