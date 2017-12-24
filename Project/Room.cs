@@ -24,7 +24,8 @@ namespace CastleGrimtol.Project
                 {
                     if (lockToCheck.Value.Type == item.Name)
                     {
-                        Console.WriteLine($"Used {item.Name}.");
+                        Console.Clear();
+                        System.Console.WriteLine($"You used the {item.Name}");
                         lockToCheck.Value.Locked = false;
                     }
                 }

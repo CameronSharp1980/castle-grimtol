@@ -33,28 +33,54 @@ namespace CastleGrimtol.Project
         public void Start()
         {
             string[] Command;
+
             // Console.WriteLine("Current Room: " + CurrentRoom.Name);
             // Console.WriteLine("Current Score: " + CurrentPlayer.Score);
             // CurrentRoom = Rooms["Barracks"];
             // Console.WriteLine("Current Room: " + CurrentRoom.Name);
 
+            DisplayTitleScreen();
+            Look();
             while (!Quit)
             {
-                Look();
                 Command = PromptUser();
                 ParseCommand(Command);
 
             }
         }
 
+        private void DisplayTitleScreen()
+        {
+            Console.Clear();
+            Console.WriteLine("<Insert Title screen and formatting here>");
+            Console.WriteLine("Press Enter to start game");
+            Console.ReadLine();
+        }
+
         public void UseItem(string itemName)
         {
-            System.Console.WriteLine($"You used the {itemName}");
             //Use / dispose of item? Use the rooms method?
+
+            // Pass to use function? (maybe the one in game.cs that takes a string?)
+            if (itemName == "empty")
+            {
+                Console.Clear();
+                Console.WriteLine("You must enter an item name with the \"use\" command.");
+                return;
+            }
+            for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
+            {
+                if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName)
+                {
+                    CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
+                }
+            }
+
         }
 
         private void Look()
         {
+            Console.Clear();
             Console.WriteLine(CurrentRoom.Description);
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
@@ -71,9 +97,30 @@ namespace CastleGrimtol.Project
 
             Console.Write("What would you like to to?: ");
             CommandStringInput = Console.ReadLine();
-
-            Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '), (CommandStringInput.Length - 1) - CommandStringInput.IndexOf(' ') + 1);
-            CommandArg = CommandStringInput.Remove(0, CommandStringInput.IndexOf(' ') + 1);
+            // Parse to switch case later.(?) (Might not be able to?)
+            if (CommandStringInput.Contains(" ") && CommandStringInput.IndexOf(" ") != CommandStringInput.Length - 1)
+            {
+                Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '), (CommandStringInput.Length - 1) - CommandStringInput.IndexOf(' ') + 1);
+                CommandArg = CommandStringInput.Remove(0, CommandStringInput.IndexOf(' ') + 1);
+            }
+            else if (!CommandStringInput.Contains(" "))
+            {
+                Command = CommandStringInput.ToLower();
+                CommandArg = "empty";
+            }
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look"))
+            {
+                System.Console.WriteLine("blahblah");
+                Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
+                CommandArg = "empty";
+            }
+            else
+            {
+                // Not used in ParseCommand switch case, but the CommandArr array needs both defined in any case
+                // Any time the command is invalid, the default switch behavior will work.
+                Command = "invalid";
+                CommandArg = "empty";
+            }
 
             // if statement to check for existence of spaces?
             CommandArr = new string[] { Command, CommandArg };
@@ -87,24 +134,23 @@ namespace CastleGrimtol.Project
 
         private void ParseCommand(string[] CommandArr)
         {
-            if (CommandArr[0].ToLower() == "go")
+            switch (CommandArr[0].ToLower())
             {
-                Go(CommandArr[1].ToLower());
-            }
-            else if (CommandArr[0].ToLower() == "take")
-            {
-                Take(CommandArr[1].ToLower());
-            }
-            else if (CommandArr[0].ToLower() == "use")
-            {
-                for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
-                {
-                    Console.WriteLine(CurrentPlayer.Inventory[i].Name);
-                    if (CurrentPlayer.Inventory[i].Name.ToLower() == CommandArr[1].ToLower())
-                    {
-                        CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
-                    }
-                }
+                case "go":
+                    Go(CommandArr[1].ToLower());
+                    break;
+                case "take":
+                    Take(CommandArr[1].ToLower());
+                    break;
+                case "use":
+                    UseItem(CommandArr[1].ToLower());
+                    break;
+                case "look":
+                    Look();
+                    break;
+                default:
+                    Console.WriteLine("Invalid command");
+                    break;
             }
         }
 
@@ -112,6 +158,13 @@ namespace CastleGrimtol.Project
         {
             //use switch cases to handle multiple spellings of direction?
             // check for spaces before split?
+            Console.Clear();
+            if (Direction == "empty")
+            {
+                Console.WriteLine("You must enter a direction with the \"go\" command.");
+                return;
+            }
+
             if (CurrentRoom.Locks.ContainsKey(Direction))
             {
                 if (CurrentRoom.Locks[Direction].Locked)
@@ -122,17 +175,31 @@ namespace CastleGrimtol.Project
                 {
                     // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
                     CurrentRoom = CurrentRoom.Exits[Direction];
+                    Look();
                 }
             }
             else if (CurrentRoom.Exits.ContainsKey(Direction))
             {
                 // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
                 CurrentRoom = CurrentRoom.Exits[Direction];
+                Look();
+            }
+            else
+            {
+                Console.WriteLine("You cannot go that way.");
             }
         }
 
         private void Take(string Item)
         {
+            bool ItemTaken = false;
+            // Console.WriteLine(ItemTaken);
+            if (Item == "empty")
+            {
+                Console.Clear();
+                Console.WriteLine("You must enter an item name with the \"take\" command.");
+                return;
+            }
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
                 if (CurrentRoom.Items[i].Name.ToLower() == Item.ToLower())
@@ -140,8 +207,29 @@ namespace CastleGrimtol.Project
                     //No spaces in key names?
                     CurrentPlayer.Inventory.Add(CurrentRoom.Items[i]);
                     CurrentRoom.Items.RemoveAt(i);
+                    ItemTaken = true;
+                    Console.Clear();
+                    Console.WriteLine($"You took the {Item}.");
                 }
             }
+            if (!ItemTaken)
+            {
+                if (CurrentPlayer.Inventory.Count > 0)
+                {
+                    for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
+                    {
+                        if (CurrentPlayer.Inventory[i].Name.ToLower() == Item.ToLower())
+                        {
+                            Console.Clear();
+                            Console.WriteLine($"There is no {Item} in the room, but you have one in your inventory.");
+                            return;
+                        }
+                    }
+                }
+                Console.Clear();
+                Console.WriteLine($"There are no {Item}s in the room for you to take.");
+            }
+
         }
 
         private void GenerateRooms()
