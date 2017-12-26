@@ -11,11 +11,14 @@ namespace CastleGrimtol.Project
 
         public string ItemCommand { get; set; }
 
-        public Item(string name, string description, string itemLocation)
+        public int Uses { get; set; }
+
+        public Item(string name, string description, string itemLocation, int uses)
         {
             Name = name;
             Description = description;
             ItemLocation = itemLocation;
+            Uses = uses;
         }
     }
 

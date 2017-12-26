@@ -62,6 +62,10 @@ namespace CastleGrimtol.Project
             //Use / dispose of item? Use the rooms method?
 
             // Pass to use function? (maybe the one in game.cs that takes a string?)
+
+            /******** START HERE!!! *********/
+            //HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?
+
             if (itemName == "empty")
             {
                 Console.Clear();
@@ -70,11 +74,24 @@ namespace CastleGrimtol.Project
             }
             for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
             {
-                if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName)
+                if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName && CurrentPlayer.Inventory[i].Uses > 0)
                 {
+                    CurrentPlayer.Inventory[i].Uses--;
                     CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
+                    if (CurrentPlayer.Inventory[i].Uses <= 0)
+                    {
+                        Console.WriteLine($"The {itemName} broke apart in your hands after you used it.");
+                    }
+                    return;
+                }
+                else if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName && CurrentPlayer.Inventory[i].Uses <= 0)
+                {
+                    Console.WriteLine($"That {itemName} is broken and can no longer be used.");
+                    return;
                 }
             }
+            Console.Clear();
+            Console.WriteLine($"You do not have any {itemName} in your inventory.");
 
         }
 
@@ -88,6 +105,33 @@ namespace CastleGrimtol.Project
             }
         }
 
+        private void Help()
+        {
+            Console.Clear();
+            Console.WriteLine("Implement help function here...");
+        }
+
+        private void EndGame()
+        {
+            string ReallyQuit;
+            Console.WriteLine("Are you sure you want to quit?");
+            Console.WriteLine("Enter \'Y\' for yes or \'N\' for no.");
+            ReallyQuit = Console.ReadLine();
+            if (ReallyQuit.ToLower() == "y" || ReallyQuit.ToLower() == "yes")
+            {
+                Quit = true;
+            }
+            else if (ReallyQuit.ToLower() == "n" || ReallyQuit.ToLower() == "no")
+            {
+                Quit = false;
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Please enter \'Y\' or'N\'");
+                EndGame();
+            }
+        }
         private string[] PromptUser()
         {
             string CommandStringInput;
@@ -108,9 +152,8 @@ namespace CastleGrimtol.Project
                 Command = CommandStringInput.ToLower();
                 CommandArg = "empty";
             }
-            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look"))
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit"))
             {
-                System.Console.WriteLine("blahblah");
                 Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
                 CommandArg = "empty";
             }
@@ -147,6 +190,12 @@ namespace CastleGrimtol.Project
                     break;
                 case "look":
                     Look();
+                    break;
+                case "help":
+                    Help();
+                    break;
+                case "quit":
+                    EndGame();
                     break;
                 default:
                     Console.WriteLine("Invalid command");
@@ -240,8 +289,8 @@ namespace CastleGrimtol.Project
             Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west");
             Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west");
 
-            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "On the Floor");
-            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "On a Dais in the center of the room.");
+            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "On the Floor", 1);
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "On a Dais in the center of the room.", 1);
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
