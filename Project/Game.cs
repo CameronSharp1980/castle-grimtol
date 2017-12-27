@@ -15,8 +15,7 @@ namespace CastleGrimtol.Project
 
         public void Setup()
         {
-            //re-initialize your Rooms dictionary here? or perhaps in reset?
-            //Generate rooms and populate with exits (And items later)
+            //Generate rooms and populate with exits, items etc.
             GenerateRooms();
 
             // Instantiate player
@@ -28,7 +27,7 @@ namespace CastleGrimtol.Project
         public void Reset()
         {
             string ReallyRestart;
-            Console.WriteLine("Are you sure you want to restart the game?");
+            Console.WriteLine("Do you wish to restart the game?");
             Console.WriteLine("Enter \'Y\' for yes or \'N\' for no.");
             ReallyRestart = Console.ReadLine();
             if (ReallyRestart.ToLower() == "y" || ReallyRestart.ToLower() == "yes")
@@ -52,11 +51,6 @@ namespace CastleGrimtol.Project
         {
             string[] Command;
 
-            // Console.WriteLine("Current Room: " + CurrentRoom.Name);
-            // Console.WriteLine("Current Score: " + CurrentPlayer.Score);
-            // CurrentRoom = Rooms["Barracks"];
-            // Console.WriteLine("Current Room: " + CurrentRoom.Name);
-
             DisplayTitleScreen();
             Look();
             while (!Quit)
@@ -77,11 +71,6 @@ namespace CastleGrimtol.Project
 
         public void UseItem(string itemName)
         {
-            //Use / dispose of item? Use the rooms method?
-
-            /******** START HERE!!! *********/
-            //HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?
-
             if (itemName == "empty")
             {
                 Console.Clear();
@@ -143,6 +132,13 @@ namespace CastleGrimtol.Project
                 EndGame();
             }
         }
+
+        private void GiveUp()
+        {
+            Console.WriteLine("As dispair overwhelms you, you consider ending the torment yourself...");
+            Reset();
+        }
+
         private string[] PromptUser()
         {
             string CommandStringInput;
@@ -163,7 +159,7 @@ namespace CastleGrimtol.Project
                 Command = CommandStringInput.ToLower();
                 CommandArg = "empty";
             }
-            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory"))
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield"))
             {
                 Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
                 CommandArg = "empty";
@@ -176,13 +172,9 @@ namespace CastleGrimtol.Project
                 CommandArg = "empty";
             }
 
-            // if statement to check for existence of spaces?
             CommandArr = new string[] { Command, CommandArg };
-            // System.Console.WriteLine(CommandArr[0]);
-            // System.Console.WriteLine(CommandArr[1]);
 
             return CommandArr;
-            // return CommandString.Split(" ");
 
         }
 
@@ -208,6 +200,9 @@ namespace CastleGrimtol.Project
                 case "help":
                     Help();
                     break;
+                case "yield":
+                    GiveUp();
+                    break;
                 case "quit":
                     EndGame();
                     break;
@@ -223,7 +218,6 @@ namespace CastleGrimtol.Project
         private void Go(string Direction)
         {
             //use switch cases to handle multiple spellings of direction?
-            // check for spaces before split?
             Console.Clear();
             if (Direction == "empty")
             {
@@ -239,14 +233,12 @@ namespace CastleGrimtol.Project
                 }
                 else if (CurrentRoom.Exits.ContainsKey(Direction))
                 {
-                    // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
                     CurrentRoom = CurrentRoom.Exits[Direction];
                     Look();
                 }
             }
             else if (CurrentRoom.Exits.ContainsKey(Direction))
             {
-                // System.Console.WriteLine("Test" + CurrentRoom.Exits[Direction]);
                 CurrentRoom = CurrentRoom.Exits[Direction];
                 Look();
             }
@@ -259,7 +251,7 @@ namespace CastleGrimtol.Project
         private void Take(string Item)
         {
             bool ItemTaken = false;
-            // Console.WriteLine(ItemTaken);
+
             if (Item == "empty")
             {
                 Console.Clear();
@@ -270,7 +262,6 @@ namespace CastleGrimtol.Project
             {
                 if (CurrentRoom.Items[i].Name.ToLower() == Item.ToLower())
                 {
-                    //No spaces in key names?
                     CurrentPlayer.Inventory.Add(CurrentRoom.Items[i]);
                     CurrentRoom.Items.RemoveAt(i);
                     ItemTaken = true;
@@ -359,7 +350,6 @@ namespace CastleGrimtol.Project
 
         private void GeneratePlayer()
         {
-            // Welcome user and ask them to create player name? (Add propery to model)
             CurrentPlayer = new Player();
             CurrentRoom = Rooms["Hallway"];
         }

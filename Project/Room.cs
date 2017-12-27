@@ -19,7 +19,6 @@ namespace CastleGrimtol.Project
         {
             if (item.Name.ToLower().Contains("key"))
             {
-                // System.Console.WriteLine("key test");
                 foreach (var lockToCheck in Locks)
                 {
                     if (lockToCheck.Value.Type == item.Name)
