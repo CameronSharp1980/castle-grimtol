@@ -27,7 +27,25 @@ namespace CastleGrimtol.Project
 
         public void Reset()
         {
-
+            string ReallyRestart;
+            Console.WriteLine("Are you sure you want to restart the game?");
+            Console.WriteLine("Enter \'Y\' for yes or \'N\' for no.");
+            ReallyRestart = Console.ReadLine();
+            if (ReallyRestart.ToLower() == "y" || ReallyRestart.ToLower() == "yes")
+            {
+                Setup();
+                Start();
+            }
+            else if (ReallyRestart.ToLower() == "n" || ReallyRestart.ToLower() == "no")
+            {
+                return;
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Please enter \'Y\' or'N\'");
+                Reset();
+            }
         }
 
         public void Start()
@@ -61,8 +79,6 @@ namespace CastleGrimtol.Project
         {
             //Use / dispose of item? Use the rooms method?
 
-            // Pass to use function? (maybe the one in game.cs that takes a string?)
-
             /******** START HERE!!! *********/
             //HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?
 
@@ -76,17 +92,12 @@ namespace CastleGrimtol.Project
             {
                 if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName && CurrentPlayer.Inventory[i].Uses > 0)
                 {
-                    CurrentPlayer.Inventory[i].Uses--;
+                    Console.WriteLine(CurrentPlayer.Inventory[i].UseText);
                     CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
                     if (CurrentPlayer.Inventory[i].Uses <= 0)
                     {
-                        Console.WriteLine($"The {itemName} broke apart in your hands after you used it.");
+                        CurrentPlayer.Inventory.Remove(CurrentPlayer.Inventory[i]);
                     }
-                    return;
-                }
-                else if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName && CurrentPlayer.Inventory[i].Uses <= 0)
-                {
-                    Console.WriteLine($"That {itemName} is broken and can no longer be used.");
                     return;
                 }
             }
@@ -152,7 +163,7 @@ namespace CastleGrimtol.Project
                 Command = CommandStringInput.ToLower();
                 CommandArg = "empty";
             }
-            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit"))
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory"))
             {
                 Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
                 CommandArg = "empty";
@@ -185,6 +196,9 @@ namespace CastleGrimtol.Project
                 case "take":
                     Take(CommandArr[1].ToLower());
                     break;
+                case "inventory":
+                    ViewInventory();
+                    break;
                 case "use":
                     UseItem(CommandArr[1].ToLower());
                     break;
@@ -196,6 +210,9 @@ namespace CastleGrimtol.Project
                     break;
                 case "quit":
                     EndGame();
+                    break;
+                case "restart":
+                    Reset();
                     break;
                 default:
                     Console.WriteLine("Invalid command");
@@ -281,16 +298,38 @@ namespace CastleGrimtol.Project
 
         }
 
+        private void ViewInventory()
+        {
+            Console.Clear();
+            if (CurrentPlayer.Inventory.Count > 0)
+            {
+
+                Console.WriteLine("You rummage through your pack and find the following items:");
+                for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {CurrentPlayer.Inventory[i].Name} : {CurrentPlayer.Inventory[i].Description}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Your pack is empty...");
+            }
+        }
+
         private void GenerateRooms()
         {
+
+            Rooms = new Dictionary<string, Room>();
+
             // Separate Room generation from exit and item population? (And adding to rooms dictionary?)
             Room Hallway = new Room("Hallway", "A room with an exit to the east");
             Room Barracks = new Room("Barracks", "A room with exits to the east and west");
             Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west");
             Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west");
 
-            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "On the Floor", 1);
-            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "On a Dais in the center of the room.", 1);
+            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "You attempted to use the Bronze Key", "On the Floor", 5, false);
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "You drank from the Silver Goblet", "On a Dais in the center of the room.", 1, false);
+            Item IronSword = new Item("Iron Sword", "An Iron Sword", "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", 5000, true);
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
@@ -298,6 +337,8 @@ namespace CastleGrimtol.Project
 
             Barracks.Exits.Add("west", Hallway);
             Barracks.Exits.Add("east", CastleCourtyard);
+
+            Barracks.Items.Add(IronSword);
 
             CastleCourtyard.Exits.Add("west", Barracks);
             CastleCourtyard.Exits.Add("east", CaptainsQuarters);

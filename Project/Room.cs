@@ -25,12 +25,26 @@ namespace CastleGrimtol.Project
                     if (lockToCheck.Value.Type == item.Name)
                     {
                         lockToCheck.Value.Locked = false;
-                        Console.WriteLine($"You unlocked the {lockToCheck.Value.Name}");
+                        Console.WriteLine($"You unlocked the {lockToCheck.Value.Name} with the {item.Name}");
                     }
                 }
-
-
             }
+
+            item.Uses--;
+            if (item.Uses <= 20)
+            {
+                item.Sturdy = false;
+            }
+
+            if (item.Uses <= 0)
+            {
+                Console.WriteLine($"The {item.Name} broke apart in your hands after you used it.");
+            }
+            else if (!item.Sturdy)
+            {
+                Console.WriteLine($"The {item.Name} appears old is noticably more worn after you used it...You should be careful lest it should break...");
+            }
+
         }
 
         public Room(string name, string description)
