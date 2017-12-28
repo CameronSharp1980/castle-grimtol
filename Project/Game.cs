@@ -15,8 +15,11 @@ namespace CastleGrimtol.Project
 
         public void Setup()
         {
-            //Generate rooms and populate with exits, items etc.
+            // Generate rooms and populate with exits, items etc.
             GenerateRooms();
+
+            // Display Title Screen
+            DisplayTitleScreen();
 
             // Instantiate player
             GeneratePlayer();
@@ -51,7 +54,10 @@ namespace CastleGrimtol.Project
         {
             string[] Command;
 
-            DisplayTitleScreen();
+            Console.WriteLine($"Welcome {CurrentPlayer.Name} <insert greeting text here>");
+            Console.WriteLine("Press enter to begin your quest...");
+            Console.ReadLine();
+
             Look();
             while (!Quit)
             {
@@ -350,7 +356,10 @@ namespace CastleGrimtol.Project
 
         private void GeneratePlayer()
         {
-            CurrentPlayer = new Player();
+            string PlayerName;
+            Console.Write("Please enter a name for our hero:");
+            PlayerName = Console.ReadLine();
+            CurrentPlayer = new Player(PlayerName);
             CurrentRoom = Rooms["Hallway"];
         }
 

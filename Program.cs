@@ -19,6 +19,7 @@ namespace CastleGrimtol
 // Win conditions
 // Lose conditions
 // Lose conditions due to bad decisions
+// Add ability to peer into next room without triggering events?
 // Add events?
 // Add disquises?
 // Add riddles and / or puzzles?
@@ -38,8 +39,7 @@ namespace CastleGrimtol
 // Are there any other "Actions" you might add to the game? or do the "use" and "take" commands suffice?
 
 // Clean up:
-// Separate room instantiation from exit and item (and other) instantiation (generate rooms method)
+// Separate room instantiation from exit and item (and other) instantiation? (generate rooms method)
 
 /******** START HERE!!! *********/
 //HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?
-// Welcome user and ask them to create player name? (Add property to model) (generate player method)
