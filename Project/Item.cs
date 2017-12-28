@@ -7,6 +7,8 @@ namespace CastleGrimtol.Project
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public bool PlayerItem { get; set; }
+
         public string UseText { get; set; }
 
         public string ItemLocation { get; set; }
@@ -17,14 +19,18 @@ namespace CastleGrimtol.Project
 
         public int Uses { get; set; }
 
-        public Item(string name, string description, string useText, string itemLocation, int uses, bool sturdy)
+        public string Power { get; set; }
+
+        public Item(string name, string description, bool playerItem, string useText, string itemLocation, int uses, bool sturdy, string power)
         {
             Name = name;
             Description = description;
+            PlayerItem = playerItem;
             UseText = useText;
             ItemLocation = itemLocation;
             Uses = uses;
             Sturdy = sturdy;
+            Power = power;
         }
     }
 

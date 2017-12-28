@@ -19,7 +19,6 @@ namespace CastleGrimtol
 // Win conditions
 // Lose conditions
 // Lose conditions due to bad decisions
-// Add ability to peer into next room without triggering events?
 // Add events?
 // Add disquises?
 // Add riddles and / or puzzles?

@@ -88,7 +88,14 @@ namespace CastleGrimtol.Project
                 if (CurrentPlayer.Inventory[i].Name.ToLower() == itemName && CurrentPlayer.Inventory[i].Uses > 0)
                 {
                     Console.WriteLine(CurrentPlayer.Inventory[i].UseText);
-                    CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
+                    if (!CurrentPlayer.Inventory[i].PlayerItem)
+                    {
+                        CurrentRoom.UseItem(CurrentPlayer.Inventory[i]);
+                    }
+                    else
+                    {
+                        CurrentPlayer.UseItem(CurrentPlayer.Inventory[i]);
+                    }
                     if (CurrentPlayer.Inventory[i].Uses <= 0)
                     {
                         CurrentPlayer.Inventory.Remove(CurrentPlayer.Inventory[i]);
@@ -108,6 +115,24 @@ namespace CastleGrimtol.Project
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
                 Console.WriteLine("You see a " + CurrentRoom.Items[i].Name + " " + CurrentRoom.Items[i].ItemLocation);
+            }
+        }
+
+        private void Peer(string Direction)
+        {
+            Console.Clear();
+            if (Direction == "empty")
+            {
+                Console.WriteLine("You must enter a direction with the \"peer\" command.");
+                return;
+            }
+            else if (CurrentPlayer.Powers.ContainsKey("peer"))
+            {
+                Console.WriteLine(CurrentRoom.Exits[Direction].PeerDetails);
+            }
+            else
+            {
+                Console.WriteLine("You lack that ability...");
             }
         }
 
@@ -202,6 +227,9 @@ namespace CastleGrimtol.Project
                     break;
                 case "look":
                     Look();
+                    break;
+                case "peer":
+                    Peer(CommandArr[1].ToLower());
                     break;
                 case "help":
                     Help();
@@ -319,14 +347,14 @@ namespace CastleGrimtol.Project
             Rooms = new Dictionary<string, Room>();
 
             // Separate Room generation from exit and item population? (And adding to rooms dictionary?)
-            Room Hallway = new Room("Hallway", "A room with an exit to the east");
-            Room Barracks = new Room("Barracks", "A room with exits to the east and west");
-            Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west");
-            Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west");
+            Room Hallway = new Room("Hallway", "A room with an exit to the east", "PeerText for Hallway");
+            Room Barracks = new Room("Barracks", "A room with exits to the east and west", "PeerText for Barracks");
+            Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west", "PeerText for Castle Courtyard");
+            Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west", "PeerText for Captain's Quarters");
 
-            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", "You attempted to use the Bronze Key", "On the Floor", 5, false);
-            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", "You drank from the Silver Goblet", "On a Dais in the center of the room.", 1, false);
-            Item IronSword = new Item("Iron Sword", "An Iron Sword", "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", 5000, true);
+            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", false, "You attempted to use the Bronze Key", "On the Floor", 5, false, "none");
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", true, "You drank from the Silver Goblet", "On a Dais in the center of the room.", 1, false, "peer");
+            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", 5000, true, "attack");
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
