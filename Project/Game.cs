@@ -36,6 +36,8 @@ namespace CastleGrimtol.Project
             ReallyRestart = Console.ReadLine();
             if (ReallyRestart.ToLower() == "y" || ReallyRestart.ToLower() == "yes")
             {
+                Quit = false;
+                Dead = false;
                 Setup();
                 Start();
             }
@@ -107,7 +109,30 @@ namespace CastleGrimtol.Project
                     }
                     if (CurrentPlayer.Inventory[i].Uses <= 0)
                     {
-                        CurrentPlayer.Inventory.Remove(CurrentPlayer.Inventory[i]);
+                        if (CurrentPlayer.Inventory[i].RequiredToProceed)
+                        {
+                            foreach (var room in Rooms)
+                            {
+                                if (CurrentPlayer.Inventory[i].RequiredLocation == room.Value.Name)
+                                {
+                                    foreach (var lockToCheck in room.Value.Locks)
+                                    {
+                                        // Long shoe-horned way to check if the lock corresponding to the key that broke is still locked. (Only keys are "required to proceed" items)
+                                        if (lockToCheck.Value.Type == CurrentPlayer.Inventory[i].Name && lockToCheck.Value.Locked)
+                                        {
+                                            Console.Clear();
+                                            Console.WriteLine($"After weeks of searching, you collapse in a heap as your strength fades...\nYou realize that the {CurrentPlayer.Inventory[i].Name} you broke weeks ago was essential to your escape... \nThe darkness takes you.");
+                                            Dead = true;
+                                            Reset();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            CurrentPlayer.Inventory.Remove(CurrentPlayer.Inventory[i]);
+                        }
                     }
                     return;
                 }
@@ -376,9 +401,9 @@ namespace CastleGrimtol.Project
             Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west", "PeerText for Castle Courtyard");
             Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west", "PeerText for Captain's Quarters");
 
-            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", false, "You attempted to use the Bronze Key", "On the Floor", 5, false, "none");
-            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", true, "You drank from the Silver Goblet", "On a Dais in the center of the room.", 1, false, "peer");
-            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", 5000, true, "attack");
+            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", false, "You attempted to use the Bronze Key", "On the Floor", "Castle Courtyard", true, 5, false, "none");
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", true, "You drank from the Silver Goblet", "On a Dais in the center of the room.", "any", false, 1, false, "peer");
+            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", "any", false, 5000, true, "attack");
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
