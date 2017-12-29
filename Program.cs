@@ -16,7 +16,7 @@ namespace CastleGrimtol
 }
 
 // To do:
-// Win conditions
+// Win conditions *win and lose variables on the main game loop? win / lose methods that fire on conditions?*
 // Lose conditions
 // Lose conditions due to bad decisions
 // Add events?

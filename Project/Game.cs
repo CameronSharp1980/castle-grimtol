@@ -6,6 +6,7 @@ namespace CastleGrimtol.Project
     public class Game : IGame
     {
         bool Quit = false;
+        bool Dead = false;
         public Room CurrentRoom { get; set; }
 
         public Player CurrentPlayer { get; set; }
@@ -40,7 +41,15 @@ namespace CastleGrimtol.Project
             }
             else if (ReallyRestart.ToLower() == "n" || ReallyRestart.ToLower() == "no")
             {
-                return;
+                if (Dead)
+                {
+                    Console.WriteLine("Better luck next time...");
+                    return;
+                }
+                else
+                {
+                    return;
+                }
             }
             else
             {
@@ -59,7 +68,7 @@ namespace CastleGrimtol.Project
             Console.ReadLine();
 
             Look();
-            while (!Quit)
+            while (!Quit && !Dead)
             {
                 Command = PromptUser();
                 ParseCommand(Command);
@@ -259,6 +268,20 @@ namespace CastleGrimtol.Project
                 return;
             }
 
+            if (CurrentRoom.Hazards.ContainsKey(Direction))
+            {
+                if (!CurrentRoom.Hazards[Direction].Nullified)
+                {
+                    Dead = true;
+                    Console.WriteLine(CurrentRoom.Hazards[Direction].DeathMessage);
+                    Reset();
+                    return;
+                }
+            }
+
+
+
+
             if (CurrentRoom.Locks.ContainsKey(Direction))
             {
                 if (CurrentRoom.Locks[Direction].Locked)
@@ -348,6 +371,7 @@ namespace CastleGrimtol.Project
 
             // Separate Room generation from exit and item population? (And adding to rooms dictionary?)
             Room Hallway = new Room("Hallway", "A room with an exit to the east", "PeerText for Hallway");
+            Room Bridge = new Room("Bridge", "A rickety wooden bridge running east to west with doors at each end.", "Peertext for Bridge");
             Room Barracks = new Room("Barracks", "A room with exits to the east and west", "PeerText for Barracks");
             Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west", "PeerText for Castle Courtyard");
             Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west", "PeerText for Captain's Quarters");
@@ -358,9 +382,17 @@ namespace CastleGrimtol.Project
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
-            Hallway.Exits.Add("east", Barracks);
+            Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
 
-            Barracks.Exits.Add("west", Hallway);
+            Hallway.Exits.Add("east", Bridge);
+
+            Bridge.Exits.Add("west", Hallway);
+            Bridge.Exits.Add("east", Barracks);
+
+            Bridge.Hazards.Add("north", Fall);
+            Bridge.Hazards.Add("south", Fall);
+
+            Barracks.Exits.Add("west", Bridge);
             Barracks.Exits.Add("east", CastleCourtyard);
 
             Barracks.Items.Add(IronSword);
@@ -370,10 +402,11 @@ namespace CastleGrimtol.Project
 
             CastleCourtyard.Locks.Add("east", BronzeLock);
 
-            CaptainsQuarters.Exits.Add("west", CastleCourtyard);
-
             CastleCourtyard.Items.Add(BronzeKey);
             CastleCourtyard.Items.Add(SilverGoblet);
+
+            CaptainsQuarters.Exits.Add("west", CastleCourtyard);
+
 
             Rooms.Add("Hallway", Hallway);
             Rooms.Add("Barracks", Barracks);
