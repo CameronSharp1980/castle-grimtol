@@ -17,7 +17,7 @@ namespace CastleGrimtol.Project
             if (!Powers.ContainsKey(item.Power))
             {
                 Powers.Add(item.Power, true);
-                Console.WriteLine($"You can now use {item.Power}");
+                Console.WriteLine($"You can now use the {item.Power} ability!");
             }
             // foreach (var CurrentPower in Powers)
             // {

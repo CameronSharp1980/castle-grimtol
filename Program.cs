@@ -17,8 +17,8 @@ namespace CastleGrimtol
 
 // To do:
 // Win conditions *win and lose variables on the main game loop? win / lose methods that fire on conditions?*
-// Lose conditions
-// Lose conditions due to bad decisions
+// ** Lose conditions
+// ** Lose conditions due to bad decisions
 // Add events?
 // Add disquises?
 // Add riddles and / or puzzles?
@@ -39,6 +39,7 @@ namespace CastleGrimtol
 
 // Clean up:
 // Separate room instantiation from exit and item (and other) instantiation? (generate rooms method)
+// Move methods to other classes (Sort them by where / what is using them)
 
 /******** START HERE!!! *********/
-//HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?
+// ** HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?

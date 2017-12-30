@@ -65,7 +65,13 @@ namespace CastleGrimtol.Project
         {
             string[] Command;
 
-            Console.WriteLine($"Welcome {CurrentPlayer.Name} <insert greeting text here>");
+            Console.Clear();
+            Console.WriteLine($"Welcome {CurrentPlayer.Name}!");
+            Console.WriteLine("Your journey begins in a haze. You awaken to only darkness.");
+            Console.WriteLine("You've no idea how you came to be here, or even where \"here\" is.");
+            Console.WriteLine("What you do know however, is that you are in danger, and that you must escape...");
+            Console.WriteLine("As your vision clears, you realize that you are in a prison cell built into a cave wall.");
+            Console.WriteLine("The door is ajar and you appear to be alone.");
             Console.WriteLine("Press enter to begin your quest...");
             Console.ReadLine();
 
@@ -81,7 +87,8 @@ namespace CastleGrimtol.Project
         private void DisplayTitleScreen()
         {
             Console.Clear();
-            Console.WriteLine("<Insert Title screen and formatting here>");
+            Console.WriteLine("Welcome to \"The Pits of Despair\"");
+            Console.WriteLine("A text adventure.");
             Console.WriteLine("Press Enter to start game");
             Console.ReadLine();
         }
@@ -162,7 +169,18 @@ namespace CastleGrimtol.Project
             }
             else if (CurrentPlayer.Powers.ContainsKey("peer"))
             {
-                Console.WriteLine(CurrentRoom.Exits[Direction].PeerDetails);
+                if (CurrentRoom.Exits.ContainsKey(Direction))
+                {
+                    Console.WriteLine(CurrentRoom.Exits[Direction].PeerDetails);
+                }
+                else if (CurrentRoom.Hazards.ContainsKey(Direction))
+                {
+                    Console.WriteLine("Mists obscure your farsight... You must use your wits and senses...");
+                }
+                else
+                {
+                    Console.WriteLine("There is nothing to see in that direction...");
+                }
             }
             else
             {
@@ -395,48 +413,88 @@ namespace CastleGrimtol.Project
             Rooms = new Dictionary<string, Room>();
 
             // Separate Room generation from exit and item population? (And adding to rooms dictionary?)
-            Room Hallway = new Room("Hallway", "A room with an exit to the east", "PeerText for Hallway");
-            Room Bridge = new Room("Bridge", "A rickety wooden bridge running east to west with doors at each end.", "Peertext for Bridge");
-            Room Barracks = new Room("Barracks", "A room with exits to the east and west", "PeerText for Barracks");
-            Room CastleCourtyard = new Room("Castle Courtyard", "A room with exits to the east and west", "PeerText for Castle Courtyard");
-            Room CaptainsQuarters = new Room("Captain's Quarters", "A room with an exit to the west", "PeerText for Captain's Quarters");
+            Room Cell = new Room("Cell",
+                                "You are in what appears to be a prison cell that was built into a dead end tunnel of a cave.\nThe cell door is slightly ajar, the lock long since rusted and broken.\nThe only direction open to you is a tunnel to the east.",
+                                 "A darkened room... A feeling of claustrophobia grips you... An image of iron bars...");
+            Room Bridge = new Room("Bridge",
+                                    "You see A rickety wooden bridge running east to west with doors at each end.\nFrom below you hear only silence.\nYou are certain a fall from here would be fatal.",
+                                    "A narrow path... A feeling of vertigo... Watch your step...");
+            Room Crossroads = new Room("Crossroads",
+                                        "Your path opens to a large cavern.\nTorches line the cavern walls gifting you with much needed illumination.\nYou can see paths worn into the floor leading north, south, east, and west.\nTo the east the sound of falling stones and creaking wood...\nTo the south, a warm light welcomes you...",
+                                        "The crossing of roads... A feeling of indecision... Choose your path...");
+            Room GobletRoom = new Room("Room of Peering",
+                                        "You are in a room nearly empty, save for the crystal dais in the center of the room...\nAn unnatural light fills the room, its source unknown to you...",
+                                        "Much needed aid... A sense of hope and light... Farsight...");
+            Room CrossroadsNorth = new Room("Crossroads North",
+                                            "A measure of light can be seen from a tunnel to the south.\nYou can also see exits leading north and east...",
+                                            "More tunnels... Empty walls... Alone...");
 
-            Item BronzeKey = new Item("Bronze Key", "An old, seemingly discarded Bronze Key", false, "You attempted to use the Bronze Key", "On the Floor", "Castle Courtyard", true, 5, false, "none");
-            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet", true, "You drank from the Silver Goblet", "On a Dais in the center of the room.", "any", false, 1, false, "peer");
+            Room EastBendTunnel = new Room("East Bend Tunnel",
+                                            "You are now in a narrow tunnel.\nIt bends at nearly a right angle with exits to the west and south...",
+                                            "A tunnel... A bend... Alone...");
+            Room JailersKeyRoom = new Room("Jailer's Key Room",
+                                        "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nThe exit to the north is open. The exit to the west looks unstable.",
+                                        "The confiners lair... Long abandoned... Something needed...");
+
+            Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet, filled with a viscous yellow fluid.", true, "You drank from the Silver Goblet", "On a Crystal dais in the center of the room.", "any", false, 1, false, "peer");
             Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", "any", false, 5000, true, "attack");
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
             Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
+            Hazard BoulderCrush = new Hazard("Boulder Crush", "Boulder Crush", "The walls give way as the timbers lining the cavern fail...\nYou are crushed below the earth...", false);
 
-            Hallway.Exits.Add("east", Bridge);
+            Cell.Exits.Add("east", Bridge);
 
-            Bridge.Exits.Add("west", Hallway);
-            Bridge.Exits.Add("east", Barracks);
+            Bridge.Exits.Add("west", Cell);
+            Bridge.Exits.Add("east", Crossroads);
 
             Bridge.Hazards.Add("north", Fall);
             Bridge.Hazards.Add("south", Fall);
 
-            Barracks.Exits.Add("west", Bridge);
-            Barracks.Exits.Add("east", CastleCourtyard);
+            Crossroads.Exits.Add("north", CrossroadsNorth);
+            Crossroads.Exits.Add("south", GobletRoom);
+            Crossroads.Exits.Add("west", Bridge);
 
-            Barracks.Items.Add(IronSword);
+            Crossroads.Hazards.Add("east", BoulderCrush);
 
-            CastleCourtyard.Exits.Add("west", Barracks);
-            CastleCourtyard.Exits.Add("east", CaptainsQuarters);
+            GobletRoom.Exits.Add("north", Crossroads);
 
-            CastleCourtyard.Locks.Add("east", BronzeLock);
+            GobletRoom.Items.Add(SilverGoblet);
 
-            CastleCourtyard.Items.Add(BronzeKey);
-            CastleCourtyard.Items.Add(SilverGoblet);
+            CrossroadsNorth.Exits.Add("south", Crossroads);
+            CrossroadsNorth.Exits.Add("north", Crossroads);
+            CrossroadsNorth.Exits.Add("east", EastBendTunnel);
 
-            CaptainsQuarters.Exits.Add("west", CastleCourtyard);
+            EastBendTunnel.Exits.Add("west", CrossroadsNorth);
+            EastBendTunnel.Exits.Add("south", JailersKeyRoom);
 
+            JailersKeyRoom.Exits.Add("north", EastBendTunnel);
 
-            Rooms.Add("Hallway", Hallway);
-            Rooms.Add("Barracks", Barracks);
-            Rooms.Add("Castle Courtyard", CastleCourtyard);
-            Rooms.Add("Captain's Quarters", CaptainsQuarters);
+            JailersKeyRoom.Hazards.Add("west", BoulderCrush);
+
+            JailersKeyRoom.Items.Add(BronzeKey);
+
+            /******Start here!!!! */
+            //Fix bug causing the goblet to not be removed from inventory after use
+            // Add room with bronze lock and ensure that you game over if you break the key before unlocking it.
+
+            // CastleCourtyard.Locks.Add("east", BronzeLock);
+
+            // CastleCourtyard.Items.Add(BronzeKey);
+
+            // CaptainsQuarters.Exits.Add("west", CastleCourtyard);
+
+            // Crossroads.Items.Add(IronSword); <- Add later? Attack function?
+
+            Rooms.Add("Cell", Cell);
+            Rooms.Add("Bridge", Bridge);
+            Rooms.Add("Crossroads", Crossroads);
+            Rooms.Add("Room of Peering", GobletRoom);
+            Rooms.Add("Crossroads North", CrossroadsNorth);
+            // Rooms.Add("Castle Courtyard", CastleCourtyard);
+            // Rooms.Add("Captain's Quarters", CaptainsQuarters);
 
         }
 
@@ -446,7 +504,7 @@ namespace CastleGrimtol.Project
             Console.Write("Please enter a name for our hero:");
             PlayerName = Console.ReadLine();
             CurrentPlayer = new Player(PlayerName);
-            CurrentRoom = Rooms["Hallway"];
+            CurrentRoom = Rooms["Cell"];
         }
 
     }
