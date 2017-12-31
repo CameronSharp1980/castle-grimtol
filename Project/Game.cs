@@ -334,7 +334,14 @@ namespace CastleGrimtol.Project
             {
                 if (CurrentRoom.Locks[Direction].Locked)
                 {
-                    Console.WriteLine($"The door is locked... The lock appears to fit a {CurrentRoom.Locks[Direction].Type}");
+                    if (CurrentRoom.Locks[Direction].Type.ToLower().Contains("key"))
+                    {
+                        Console.WriteLine($"The door is locked... The lock appears to fit a {CurrentRoom.Locks[Direction].Type}");
+                    }
+                    else if (CurrentRoom.Locks[Direction].Type.ToLower().Contains("passphrase"))
+                    {
+                        Console.WriteLine($"You cannot pass this way... An inscription states that you must utter a {CurrentRoom.Locks[Direction].Type}");
+                    }
                 }
                 else if (CurrentRoom.Exits.ContainsKey(Direction))
                 {
@@ -491,6 +498,8 @@ namespace CastleGrimtol.Project
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
+            Lock KonamiLock = new Lock("Konami Lock", "Magic Passphrase", true);
+
             Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
             Hazard BoulderCrush = new Hazard("Boulder Crush", "Boulder Crush", "The walls give way as the timbers lining the cavern fail...\nYou are crushed below the earth...", false);
 
@@ -532,6 +541,8 @@ namespace CastleGrimtol.Project
 
             KonamiClueRoom.Exits.Add("northwest", Maze1);
             KonamiClueRoom.Exits.Add("east", Crossroads);
+
+            KonamiClueRoom.Locks.Add("east", KonamiLock);
 
             #region Konami Maze Data
             // Collection of nearly identical rooms comprising a maze whos exits conform to the "Konami code". 
