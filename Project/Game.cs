@@ -311,6 +311,11 @@ namespace CastleGrimtol.Project
                 return;
             }
 
+            if (CurrentRoom.Chimes.ContainsKey(Direction))
+            {
+                CurrentRoom.Chimes[Direction].PlayChime();
+            }
+
             if (CurrentRoom.Hazards.ContainsKey(Direction))
             {
                 if (!CurrentRoom.Hazards[Direction].Nullified)
@@ -435,6 +440,9 @@ namespace CastleGrimtol.Project
             Room JailersKeyRoom = new Room("Jailer's Key Room",
                                         "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nThe exit to the north is open. The exit to the west looks unstable.",
                                         "The confiners lair... Long abandoned... Something needed...");
+            Room KonamiClueRoom = new Room("Konami Clue Room",
+                                            "You have entered a brightly-lit room with exits to the northwest and east.\nA large engraving on the northern wall states: \"To proceed you must speak the ancient words of \"No-clipping\".\nTo Prove yourself worthy of these words, proceed northwest. \"",
+                                            "A maze... An enigma... Speak...");
 
 
             Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
@@ -445,6 +453,9 @@ namespace CastleGrimtol.Project
 
             Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
             Hazard BoulderCrush = new Hazard("Boulder Crush", "Boulder Crush", "The walls give way as the timbers lining the cavern fail...\nYou are crushed below the earth...", false);
+
+            Chime Success = new Chime("Success", "Success", 2500);
+            Chime Failure = new Chime("Failure", "Failure", 2500);
 
             Cell.Exits.Add("east", Bridge);
 
@@ -465,7 +476,7 @@ namespace CastleGrimtol.Project
             GobletRoom.Items.Add(SilverGoblet);
 
             CrossroadsNorth.Exits.Add("south", Crossroads);
-            CrossroadsNorth.Exits.Add("north", Crossroads);
+            CrossroadsNorth.Exits.Add("north", KonamiClueRoom);
             CrossroadsNorth.Exits.Add("east", EastBendTunnel);
 
             CrossroadsNorth.Locks.Add("north", BronzeLock);
@@ -479,6 +490,11 @@ namespace CastleGrimtol.Project
 
             JailersKeyRoom.Items.Add(BronzeKey);
 
+            KonamiClueRoom.Exits.Add("northwest", Crossroads);
+            KonamiClueRoom.Exits.Add("east", Crossroads);
+
+            KonamiClueRoom.Chimes.Add("northwest", Failure);
+
             /******Start here!!!! */
 
             // Crossroads.Items.Add(IronSword); <- Add later? Attack function?
@@ -488,6 +504,9 @@ namespace CastleGrimtol.Project
             Rooms.Add("Crossroads", Crossroads);
             Rooms.Add("Room of Peering", GobletRoom);
             Rooms.Add("Crossroads North", CrossroadsNorth);
+            Rooms.Add("East Bend Tunnel", EastBendTunnel);
+            Rooms.Add("Jailer's Key Room", JailersKeyRoom);
+            Rooms.Add("Konami Clue Room", KonamiClueRoom);
 
         }
 

@@ -15,6 +15,8 @@ namespace CastleGrimtol.Project
 
         public Dictionary<string, Lock> Locks { get; set; }
 
+        public Dictionary<string, Chime> Chimes { get; set; }
+
         public Dictionary<string, Hazard> Hazards { get; set; }
 
         public List<Item> Items { get; set; }
@@ -58,6 +60,7 @@ namespace CastleGrimtol.Project
             PeerDetails = peerDetails;
             Exits = new Dictionary<string, Room>();
             Locks = new Dictionary<string, Lock>();
+            Chimes = new Dictionary<string, Chime>();
             Hazards = new Dictionary<string, Hazard>();
             Items = new List<Item>();
         }
