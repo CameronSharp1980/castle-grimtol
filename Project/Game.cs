@@ -80,6 +80,11 @@ namespace CastleGrimtol.Project
             {
                 Command = PromptUser();
                 ParseCommand(Command);
+                if (CurrentRoom.Name == "Exit Room")
+                {
+                    Quit = true;
+                    GameGoodEnd();
+                }
 
             }
         }
@@ -427,6 +432,14 @@ namespace CastleGrimtol.Project
             }
         }
 
+        private void GameGoodEnd()
+        {
+            Console.Clear();
+            System.Console.WriteLine(Rooms["Exit Room"].Description);
+            Console.WriteLine($"Congratulations {CurrentPlayer.Name}! You have successfully escaped the pits of despair!");
+            Console.WriteLine("We hope you enjoyed your quest and will play again!");
+        }
+
         private void GenerateRooms()
         {
 
@@ -499,10 +512,21 @@ namespace CastleGrimtol.Project
                                 "A maze... An enigma... Hearken to the chimes...");
             #endregion
 
+            Room Hallway = new Room("Hallway",
+                                    "You are in a well-lit hall. The stone slab you passed through, now solid once more sits to the west.\nOrnate tapestries line the walls.\nAt first glance the room appears well-kept, but as you peer eastward, you see that the rooms state gradually decays as you vision nears the eastern exit...\nYou hear something... Something large beyond those doors.\nA sense of dread grips you... For that is the only direction you can go...",
+                                    "Journey's end... Freedom near... Hush...");
+
+            Room GruChamber = new Room("Gru Chamber",
+                                       "The stench is overwhemling! Something has died in this room... Perhaps many somethings...\nA portcullis has dropped before the western exit... There is no turning back!\nTo the north is an exit... If you can make it that far.",
+                                       "Danger... Hear your steps... Blind...");
+
+            Room ExitRoom = new Room("Exit Room",
+                                     "The way opens before you! The cavern walls give way to a sunlit forest and your freedom!",
+                                     "Freedom... Take it...");
 
             Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
             Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet, filled with a viscous yellow fluid.", true, "You drank from the Silver Goblet", "On a Crystal dais in the center of the room.", "any", false, 1, false, "peer");
-            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", "any", false, 5000, true, "attack");
+            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the eastern wall", "any", true, 5000, true, "attack");
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
@@ -548,7 +572,7 @@ namespace CastleGrimtol.Project
             JailersKeyRoom.Items.Add(BronzeKey);
 
             KonamiClueRoom.Exits.Add("northwest", Maze1);
-            KonamiClueRoom.Exits.Add("east", Crossroads);
+            KonamiClueRoom.Exits.Add("east", Hallway);
 
             KonamiClueRoom.Locks.Add("east", KonamiLock);
 
@@ -657,7 +681,11 @@ namespace CastleGrimtol.Project
             Maze12.Chimes.Add("south", Success);
             #endregion
 
-            // Crossroads.Items.Add(IronSword); <- Add later? Attack function?
+            Hallway.Exits.Add("east", GruChamber);
+
+            Hallway.Items.Add(IronSword);
+
+            GruChamber.Exits.Add("north", ExitRoom);
 
             Rooms.Add("Cell", Cell);
             Rooms.Add("Bridge", Bridge);
@@ -667,6 +695,12 @@ namespace CastleGrimtol.Project
             Rooms.Add("East Bend Tunnel", EastBendTunnel);
             Rooms.Add("Jailer's Key Room", JailersKeyRoom);
             Rooms.Add("Konami Clue Room", KonamiClueRoom);
+
+            // Add maze rooms to Rooms dictionary? Currently only needed to lock checks and there are no locks there...
+
+            Rooms.Add("Hallway", Hallway);
+            Rooms.Add("Gru Chamber", GruChamber);
+            Rooms.Add("Exit Room", ExitRoom);
 
         }
 
