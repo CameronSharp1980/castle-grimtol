@@ -428,7 +428,7 @@ namespace CastleGrimtol.Project
                                         "Your path opens to a large cavern.\nTorches line the cavern walls gifting you with much needed illumination.\nYou can see paths worn into the floor leading north, south, east, and west.\nTo the east the sound of falling stones and creaking wood...\nTo the south, a warm light welcomes you...",
                                         "The crossing of roads... A feeling of indecision... Choose your path...");
             Room GobletRoom = new Room("Room of Peering",
-                                        "You are in a room nearly empty, save for the crystal dais in the center of the room...\nAn unnatural light fills the room, its source unknown to you...",
+                                        "You are in a room nearly empty, save for the crystal dais in the center of the room...\nAn unnatural light fills the room, its source unknown to you. The only exit returning you north whence you came...",
                                         "Much needed aid... A sense of hope and light... Farsight...");
             Room CrossroadsNorth = new Room("Crossroads North",
                                             "A measure of light can be seen from a tunnel to the south.\nYou can also see exits leading north and east...",
@@ -438,50 +438,50 @@ namespace CastleGrimtol.Project
                                             "You are now in a narrow tunnel.\nIt bends at nearly a right angle with exits to the west and south...",
                                             "A tunnel... A bend... Alone...");
             Room JailersKeyRoom = new Room("Jailer's Key Room",
-                                        "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nThe exit to the north is open. The exit to the west looks unstable.",
+                                        "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nIt would appear this room was once occupied by the jailer.\nThe exit to the north is open. The exit to the west looks unstable.",
                                         "The confiners lair... Long abandoned... Something needed...");
             Room KonamiClueRoom = new Room("Konami Clue Room",
-                                            "You have entered a brightly-lit room with exits to the northwest and east.\nA large engraving on the northern wall states: \"To proceed you must speak the ancient words of \"No-clipping\".\nTo obtain these words, proceed northwest. \"",
-                                            "A maze... An enigma... Speak...");
+                                            "You have entered a brightly-lit room with an exit to the northwest.\nTo the east, you see an ornate stone slab affixed into the wall.\nA large engraving on the northern wall states: \"To proceed east towards freedom, you must SPEAK the ancient words of \"No-clipping\".\nTo obtain these words, proceed northwest. \"",
+                                            "A maze... An enigma... Hearken to the chimes...");
             #region Konami Maze Rooms
             // Collection of nearly identical rooms comprising a maze whos exits conform to the "Konami code". 
             // The final room has a pass key needed to proceed and any wrong turn returns you to the start of the maze.
             Room Maze1 = new Room("Maze1",
-                                "Move in step to the sacred code of Konami!",
+                                "As you enter, a voice echoes in your mind:\n\"There is but one path to your goal. You must move in step with the code of lives to succeed!\nAny misstep shall rob you of your progress.\nFailure shall ensure your eternal entombment within this place... The only way out is through...\"\nThe room is empty and the walls undecorated.\nThere are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\"",
                                 "The Chimes will guide you...");
             Room Maze2 = new Room("Maze2",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze3 = new Room("Maze3",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze4 = new Room("Maze4",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze5 = new Room("Maze5",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze6 = new Room("Maze6",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze7 = new Room("Maze7",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze8 = new Room("Maze8",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but four exits labelled: \"Up\", \"Down\", \"Left\", and \"Right\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze9 = new Room("Maze9",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but two exits labelled: \"B\", and \"A\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze10 = new Room("Maze10",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of lives!\n(The room is empty and the walls undecorated. There are but two exits labelled: \"B\", and \"A\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze11 = new Room("Maze11",
-                                "Move in step to the sacred code of Konami!",
-                                "The Chimes will guide you...");
+                                "Move in step to the sacred code of...Konami!\n(The room is empty and the walls undecorated. There is but a single exit labelled: \"Start\")",
+                                "A maze... An enigma... Hearken to the chimes...");
             Room Maze12 = new Room("Maze12",
                                 "You have entered a room with no exits, save for the southern entrance you came through.\nCarved into the wall is a seemingly random series of letters:\n\"idspispopd\"... Could this be the sacred word you were searching for?\nLooking south through the doorway you came in, you see that it leads to the start of the maze...",
-                                "The Chimes will guide you...");
+                                "A maze... An enigma... Hearken to the chimes...");
             #endregion
 
 

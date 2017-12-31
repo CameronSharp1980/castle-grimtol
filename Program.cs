@@ -16,21 +16,23 @@ namespace CastleGrimtol
 }
 
 // To do:
-// Win conditions *win and lose variables on the main game loop? win / lose methods that fire on conditions?*
+// WIN CONDITIONS *win and lose variables on the main game loop? win / lose methods that fire on conditions?*
 // ** Lose conditions
 // ** Lose conditions due to bad decisions
-// Add events?
-// Add disquises?
+// FINISH THE HELP FUNCTION
 // Add riddles and / or puzzles?
 // Add enemies / combat?
 // Add sneak status toggle?
+
+// Optional To do:
 // Add the ability to use items directly from the room? (Such as "use bed")
 // Add equipment for combat?
+// Add events?
+// Add disquises?
 
 // Design:
 // Add colors and perhaps beeps
 // Add points / score?
-
 
 // To consider:
 // Currently if appropriate items are in your inventory, you are passing off to the Rooms use item method.
