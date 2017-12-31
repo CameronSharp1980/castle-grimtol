@@ -242,7 +242,7 @@ namespace CastleGrimtol.Project
                 Command = CommandStringInput.ToLower();
                 CommandArg = "empty";
             }
-            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield"))
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield") || CommandStringInput.ToLower().Contains("say") || CommandStringInput.ToLower().Contains("speak"))
             {
                 Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
                 CommandArg = "empty";
@@ -276,6 +276,14 @@ namespace CastleGrimtol.Project
                     break;
                 case "use":
                     UseItem(CommandArr[1].ToLower());
+                    break;
+                case "say":
+                case "speak":
+                    Dead = CurrentPlayer.Speak(CommandArr[1].ToLower(), CurrentRoom);
+                    if (Dead)
+                    {
+                        Reset();
+                    }
                     break;
                 case "look":
                     Look();
@@ -338,9 +346,9 @@ namespace CastleGrimtol.Project
                     {
                         Console.WriteLine($"The door is locked... The lock appears to fit a {CurrentRoom.Locks[Direction].Type}");
                     }
-                    else if (CurrentRoom.Locks[Direction].Type.ToLower().Contains("passphrase"))
+                    else if (CurrentRoom.Locks[Direction].Name.ToLower().Contains("passphrase"))
                     {
-                        Console.WriteLine($"You cannot pass this way... An inscription states that you must utter a {CurrentRoom.Locks[Direction].Type}");
+                        Console.WriteLine($"You cannot pass this way... An inscription states that you must utter a {CurrentRoom.Locks[Direction].Name}");
                     }
                 }
                 else if (CurrentRoom.Exits.ContainsKey(Direction))
@@ -498,7 +506,7 @@ namespace CastleGrimtol.Project
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
-            Lock KonamiLock = new Lock("Konami Lock", "Magic Passphrase", true);
+            Lock KonamiLock = new Lock("Magic Passphrase", "idspispopd", true);
 
             Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
             Hazard BoulderCrush = new Hazard("Boulder Crush", "Boulder Crush", "The walls give way as the timbers lining the cavern fail...\nYou are crushed below the earth...", false);
@@ -665,7 +673,7 @@ namespace CastleGrimtol.Project
         private void GeneratePlayer()
         {
             string PlayerName;
-            Console.Write("Please enter a name for our hero:");
+            Console.Write("Please enter a name for our hero: ");
             PlayerName = Console.ReadLine();
             CurrentPlayer = new Player(PlayerName);
             CurrentRoom = Rooms["Cell"];
