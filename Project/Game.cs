@@ -436,6 +436,7 @@ namespace CastleGrimtol.Project
                                         "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nThe exit to the north is open. The exit to the west looks unstable.",
                                         "The confiners lair... Long abandoned... Something needed...");
 
+
             Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
             Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet, filled with a viscous yellow fluid.", true, "You drank from the Silver Goblet", "On a Crystal dais in the center of the room.", "any", false, 1, false, "peer");
             Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the wall", "any", false, 5000, true, "attack");
@@ -467,6 +468,8 @@ namespace CastleGrimtol.Project
             CrossroadsNorth.Exits.Add("north", Crossroads);
             CrossroadsNorth.Exits.Add("east", EastBendTunnel);
 
+            CrossroadsNorth.Locks.Add("north", BronzeLock);
+
             EastBendTunnel.Exits.Add("west", CrossroadsNorth);
             EastBendTunnel.Exits.Add("south", JailersKeyRoom);
 
@@ -477,14 +480,6 @@ namespace CastleGrimtol.Project
             JailersKeyRoom.Items.Add(BronzeKey);
 
             /******Start here!!!! */
-            //Fix bug causing the goblet to not be removed from inventory after use
-            // Add room with bronze lock and ensure that you game over if you break the key before unlocking it.
-
-            // CastleCourtyard.Locks.Add("east", BronzeLock);
-
-            // CastleCourtyard.Items.Add(BronzeKey);
-
-            // CaptainsQuarters.Exits.Add("west", CastleCourtyard);
 
             // Crossroads.Items.Add(IronSword); <- Add later? Attack function?
 
@@ -493,8 +488,6 @@ namespace CastleGrimtol.Project
             Rooms.Add("Crossroads", Crossroads);
             Rooms.Add("Room of Peering", GobletRoom);
             Rooms.Add("Crossroads North", CrossroadsNorth);
-            // Rooms.Add("Castle Courtyard", CastleCourtyard);
-            // Rooms.Add("Captain's Quarters", CaptainsQuarters);
 
         }
 

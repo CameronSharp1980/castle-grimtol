@@ -18,6 +18,7 @@ namespace CastleGrimtol.Project
             {
                 Powers.Add(item.Power, true);
                 Console.WriteLine($"You can now use the {item.Power} ability!");
+                item.Uses--;
             }
             // foreach (var CurrentPower in Powers)
             // {
