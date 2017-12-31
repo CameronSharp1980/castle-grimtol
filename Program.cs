@@ -42,4 +42,4 @@ namespace CastleGrimtol
 // Move methods to other classes (Sort them by where / what is using them)
 
 /******** START HERE!!! *********/
-// ** HOW CAN YOU CHECK IF A BROKEN ITEM WAS NEEDED / IS STILL NEEDED AFTER FAILED USE?
+// Clean up text for maze rooms and then move on to the "say"/"speak" door locks / methods.

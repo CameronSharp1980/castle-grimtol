@@ -441,8 +441,48 @@ namespace CastleGrimtol.Project
                                         "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nThe exit to the north is open. The exit to the west looks unstable.",
                                         "The confiners lair... Long abandoned... Something needed...");
             Room KonamiClueRoom = new Room("Konami Clue Room",
-                                            "You have entered a brightly-lit room with exits to the northwest and east.\nA large engraving on the northern wall states: \"To proceed you must speak the ancient words of \"No-clipping\".\nTo Prove yourself worthy of these words, proceed northwest. \"",
+                                            "You have entered a brightly-lit room with exits to the northwest and east.\nA large engraving on the northern wall states: \"To proceed you must speak the ancient words of \"No-clipping\".\nTo obtain these words, proceed northwest. \"",
                                             "A maze... An enigma... Speak...");
+            #region Konami Maze Rooms
+            // Collection of nearly identical rooms comprising a maze whos exits conform to the "Konami code". 
+            // The final room has a pass key needed to proceed and any wrong turn returns you to the start of the maze.
+            Room Maze1 = new Room("Maze1",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze2 = new Room("Maze2",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze3 = new Room("Maze3",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze4 = new Room("Maze4",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze5 = new Room("Maze5",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze6 = new Room("Maze6",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze7 = new Room("Maze7",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze8 = new Room("Maze8",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze9 = new Room("Maze9",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze10 = new Room("Maze10",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze11 = new Room("Maze11",
+                                "Move in step to the sacred code of Konami!",
+                                "The Chimes will guide you...");
+            Room Maze12 = new Room("Maze12",
+                                "You have entered a room with no exits, save for the southern entrance you came through.\nCarved into the wall is a seemingly random series of letters:\n\"idspispopd\"... Could this be the sacred word you were searching for?\nLooking south through the doorway you came in, you see that it leads to the start of the maze...",
+                                "The Chimes will guide you...");
+            #endregion
 
 
             Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
@@ -490,12 +530,113 @@ namespace CastleGrimtol.Project
 
             JailersKeyRoom.Items.Add(BronzeKey);
 
-            KonamiClueRoom.Exits.Add("northwest", Crossroads);
+            KonamiClueRoom.Exits.Add("northwest", Maze1);
             KonamiClueRoom.Exits.Add("east", Crossroads);
 
-            KonamiClueRoom.Chimes.Add("northwest", Failure);
+            #region Konami Maze Data
+            // Collection of nearly identical rooms comprising a maze whos exits conform to the "Konami code". 
+            // The final room has a pass key needed to proceed and any wrong turn returns you to the start of the maze.
 
-            /******Start here!!!! */
+            Maze1.Exits.Add("up", Maze2);
+            Maze1.Exits.Add("down", KonamiClueRoom);
+            Maze1.Exits.Add("left", KonamiClueRoom);
+            Maze1.Exits.Add("right", KonamiClueRoom);
+
+            Maze1.Chimes.Add("up", Success);
+            Maze1.Chimes.Add("down", Failure);
+            Maze1.Chimes.Add("left", Failure);
+            Maze1.Chimes.Add("right", Failure);
+
+            Maze2.Exits.Add("up", Maze3);
+            Maze2.Exits.Add("down", KonamiClueRoom);
+            Maze2.Exits.Add("left", KonamiClueRoom);
+            Maze2.Exits.Add("right", KonamiClueRoom);
+
+            Maze2.Chimes.Add("up", Success);
+            Maze2.Chimes.Add("down", Failure);
+            Maze2.Chimes.Add("left", Failure);
+            Maze2.Chimes.Add("right", Failure);
+
+            Maze3.Exits.Add("up", KonamiClueRoom);
+            Maze3.Exits.Add("down", Maze4);
+            Maze3.Exits.Add("left", KonamiClueRoom);
+            Maze3.Exits.Add("right", KonamiClueRoom);
+
+            Maze3.Chimes.Add("up", Failure);
+            Maze3.Chimes.Add("down", Success);
+            Maze3.Chimes.Add("left", Failure);
+            Maze3.Chimes.Add("right", Failure);
+
+            Maze4.Exits.Add("up", KonamiClueRoom);
+            Maze4.Exits.Add("down", Maze5);
+            Maze4.Exits.Add("left", KonamiClueRoom);
+            Maze4.Exits.Add("right", KonamiClueRoom);
+
+            Maze4.Chimes.Add("up", Failure);
+            Maze4.Chimes.Add("down", Success);
+            Maze4.Chimes.Add("left", Failure);
+            Maze4.Chimes.Add("right", Failure);
+
+            Maze5.Exits.Add("up", KonamiClueRoom);
+            Maze5.Exits.Add("down", KonamiClueRoom);
+            Maze5.Exits.Add("left", Maze6);
+            Maze5.Exits.Add("right", KonamiClueRoom);
+
+            Maze5.Chimes.Add("up", Failure);
+            Maze5.Chimes.Add("down", Failure);
+            Maze5.Chimes.Add("left", Success);
+            Maze5.Chimes.Add("right", Failure);
+
+            Maze6.Exits.Add("up", KonamiClueRoom);
+            Maze6.Exits.Add("down", KonamiClueRoom);
+            Maze6.Exits.Add("left", KonamiClueRoom);
+            Maze6.Exits.Add("right", Maze7);
+
+            Maze6.Chimes.Add("up", Failure);
+            Maze6.Chimes.Add("down", Failure);
+            Maze6.Chimes.Add("left", Failure);
+            Maze6.Chimes.Add("right", Success);
+
+            Maze7.Exits.Add("up", KonamiClueRoom);
+            Maze7.Exits.Add("down", KonamiClueRoom);
+            Maze7.Exits.Add("left", Maze8);
+            Maze7.Exits.Add("right", KonamiClueRoom);
+
+            Maze7.Chimes.Add("up", Failure);
+            Maze7.Chimes.Add("down", Failure);
+            Maze7.Chimes.Add("left", Success);
+            Maze7.Chimes.Add("right", Failure);
+
+            Maze8.Exits.Add("up", KonamiClueRoom);
+            Maze8.Exits.Add("down", KonamiClueRoom);
+            Maze8.Exits.Add("left", KonamiClueRoom);
+            Maze8.Exits.Add("right", Maze9);
+
+            Maze8.Chimes.Add("up", Failure);
+            Maze8.Chimes.Add("down", Failure);
+            Maze8.Chimes.Add("left", Failure);
+            Maze8.Chimes.Add("right", Success);
+
+            Maze9.Exits.Add("b", Maze10);
+            Maze9.Exits.Add("a", KonamiClueRoom);
+
+            Maze9.Chimes.Add("b", Success);
+            Maze9.Chimes.Add("a", Failure);
+
+            Maze10.Exits.Add("b", KonamiClueRoom);
+            Maze10.Exits.Add("a", Maze11);
+
+            Maze10.Chimes.Add("b", Failure);
+            Maze10.Chimes.Add("a", Success);
+
+            Maze11.Exits.Add("start", Maze12);
+
+            Maze11.Chimes.Add("start", Success);
+
+            Maze12.Exits.Add("south", KonamiClueRoom);
+
+            Maze12.Chimes.Add("south", Success);
+            #endregion
 
             // Crossroads.Items.Add(IronSword); <- Add later? Attack function?
 
