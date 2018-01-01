@@ -226,7 +226,6 @@ namespace CastleGrimtol.Project
             Console.WriteLine("peer <Direction or exit name> - Allows the player to magically \"peer\" in the direction specified, sometimes providing a valuable clue.");
             Console.WriteLine("sneak - After use, the player will move silently for a limited number of actions.");
             Console.WriteLine("attack <Target> - The player will attempt to attack the specified target with the currenly equipped weapon. Must have a weapon to use.");
-            Console.WriteLine();
         }
 
         private void EndGame()
@@ -264,6 +263,7 @@ namespace CastleGrimtol.Project
             string Command;
             string CommandArg;
 
+            Console.WriteLine();
             Console.Write("What would you like to to?: ");
             CommandStringInput = Console.ReadLine();
             // Parse to switch case later.(?) (Might not be able to?)
