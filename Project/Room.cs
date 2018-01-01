@@ -19,6 +19,8 @@ namespace CastleGrimtol.Project
 
         public Dictionary<string, Hazard> Hazards { get; set; }
 
+        public List<Enemy> Enemies { get; set; }
+
         public List<Item> Items { get; set; }
 
         public void UseItem(Item item)
@@ -62,6 +64,7 @@ namespace CastleGrimtol.Project
             Locks = new Dictionary<string, Lock>();
             Chimes = new Dictionary<string, Chime>();
             Hazards = new Dictionary<string, Hazard>();
+            Enemies = new List<Enemy>();
             Items = new List<Item>();
         }
     }

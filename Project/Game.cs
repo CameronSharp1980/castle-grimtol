@@ -6,7 +6,6 @@ namespace CastleGrimtol.Project
     public class Game : IGame
     {
         bool Quit = false;
-        bool Dead = false;
         public Room CurrentRoom { get; set; }
 
         public Player CurrentPlayer { get; set; }
@@ -37,13 +36,13 @@ namespace CastleGrimtol.Project
             if (ReallyRestart.ToLower() == "y" || ReallyRestart.ToLower() == "yes")
             {
                 Quit = false;
-                Dead = false;
+                CurrentPlayer.Dead = false;
                 Setup();
                 Start();
             }
             else if (ReallyRestart.ToLower() == "n" || ReallyRestart.ToLower() == "no")
             {
-                if (Dead)
+                if (CurrentPlayer.Dead)
                 {
                     Console.WriteLine("Better luck next time...");
                     return;
@@ -76,7 +75,7 @@ namespace CastleGrimtol.Project
             Console.ReadLine();
 
             Look();
-            while (!Quit && !Dead)
+            while (!Quit && !CurrentPlayer.Dead)
             {
                 Command = PromptUser();
                 ParseCommand(Command);
@@ -84,6 +83,14 @@ namespace CastleGrimtol.Project
                 {
                     Quit = true;
                     GameGoodEnd();
+                }
+                if (CurrentRoom.Enemies.Count > 0)
+                {
+                    CurrentRoom.Enemies[0].DetectPlayerCheck(CurrentPlayer);
+                    if (CurrentPlayer.Dead)
+                    {
+                        Reset();
+                    }
                 }
 
             }
@@ -134,7 +141,7 @@ namespace CastleGrimtol.Project
                                         {
                                             Console.Clear();
                                             Console.WriteLine($"After weeks of searching, you collapse in a heap as your strength fades...\nYou realize that the {CurrentPlayer.Inventory[i].Name} you broke weeks ago was essential to your escape... \nThe darkness takes you.");
-                                            Dead = true;
+                                            CurrentPlayer.Dead = true;
                                             Reset();
                                         }
                                     }
@@ -160,7 +167,7 @@ namespace CastleGrimtol.Project
             Console.WriteLine(CurrentRoom.Description);
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
-                Console.WriteLine("You see a " + CurrentRoom.Items[i].Name + " " + CurrentRoom.Items[i].ItemLocation);
+                Console.WriteLine("You see " + CurrentRoom.Items[i].Description + " " + CurrentRoom.Items[i].ItemLocation);
             }
         }
 
@@ -247,7 +254,7 @@ namespace CastleGrimtol.Project
                 Command = CommandStringInput.ToLower();
                 CommandArg = "empty";
             }
-            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield") || CommandStringInput.ToLower().Contains("say") || CommandStringInput.ToLower().Contains("speak"))
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield") || CommandStringInput.ToLower().Contains("say") || CommandStringInput.ToLower().Contains("speak") || CommandStringInput.ToLower().Contains("sneak"))
             {
                 Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
                 CommandArg = "empty";
@@ -261,6 +268,10 @@ namespace CastleGrimtol.Project
             }
 
             CommandArr = new string[] { Command, CommandArg };
+            if (!CurrentPlayer.Dead)
+            {
+                CurrentPlayer.CheckStatus();
+            }
 
             return CommandArr;
 
@@ -284,8 +295,8 @@ namespace CastleGrimtol.Project
                     break;
                 case "say":
                 case "speak":
-                    Dead = CurrentPlayer.Speak(CommandArr[1].ToLower(), CurrentRoom);
-                    if (Dead)
+                    CurrentPlayer.Dead = CurrentPlayer.Speak(CommandArr[1].ToLower(), CurrentRoom);
+                    if (CurrentPlayer.Dead)
                     {
                         Reset();
                     }
@@ -295,6 +306,9 @@ namespace CastleGrimtol.Project
                     break;
                 case "peer":
                     Peer(CommandArr[1].ToLower());
+                    break;
+                case "sneak":
+                    CurrentPlayer.Sneak();
                     break;
                 case "help":
                     Help();
@@ -333,7 +347,7 @@ namespace CastleGrimtol.Project
             {
                 if (!CurrentRoom.Hazards[Direction].Nullified)
                 {
-                    Dead = true;
+                    CurrentPlayer.Dead = true;
                     Console.WriteLine(CurrentRoom.Hazards[Direction].DeathMessage);
                     Reset();
                     return;
@@ -516,17 +530,18 @@ namespace CastleGrimtol.Project
                                     "You are in a well-lit hall. The stone slab you passed through, now solid once more sits to the west.\nOrnate tapestries line the walls.\nAt first glance the room appears well-kept, but as you peer eastward, you see that the rooms state gradually decays as you vision nears the eastern exit...\nYou hear something... Something large beyond those doors.\nA sense of dread grips you... For that is the only direction you can go...",
                                     "Journey's end... Freedom near... Hush...");
 
-            Room GruChamber = new Room("Gru Chamber",
-                                       "The stench is overwhemling! Something has died in this room... Perhaps many somethings...\nA portcullis has dropped before the western exit... There is no turning back!\nTo the north is an exit... If you can make it that far.",
+            Room GrueChamber = new Room("Grue Chamber",
+                                       "The stench is overwhemling! Something has died in this room... Perhaps many somethings...\nA portcullis has dropped before the western exit... There is no turning back!\nTo the north is an exit... If you can make it that far. Hulking before you is a Grue!",
                                        "Danger... Hear your steps... Blind...");
 
             Room ExitRoom = new Room("Exit Room",
                                      "The way opens before you! The cavern walls give way to a sunlit forest and your freedom!",
                                      "Freedom... Take it...");
 
-            Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
-            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet, filled with a viscous yellow fluid.", true, "You drank from the Silver Goblet", "On a Crystal dais in the center of the room.", "any", false, 1, false, "peer");
-            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, "You swung the Iron sword with all your might", "Hanging in a decorative frame on the eastern wall", "any", true, 5000, true, "attack");
+            Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
+            Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet, filled with a viscous yellow fluid.", true, false, "You drank from the Silver Goblet", "On a Crystal dais in the center of the room.", "any", false, 1, false, "peer");
+            Item SlickShoes = new Item("Slick Shoes", "A well worn pair of slick shoes with soft pads.", true, false, "You equipped the Slick Shoes", "worn by a dead adventurer next to the east exit...", "any", false, 1, false, "sneak");
+            Item IronSword = new Item("Iron Sword", "An Iron Sword", true, true, "You equipped the Iron Sword", "Hanging in a decorative frame on the eastern wall", "any", true, 5000, true, "attack");
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
 
@@ -535,6 +550,8 @@ namespace CastleGrimtol.Project
             Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
             Hazard BoulderCrush = new Hazard("Boulder Crush", "Boulder Crush", "The walls give way as the timbers lining the cavern fail...\nYou are crushed below the earth...", false);
 
+            Enemy Grue = new Enemy("Grue", "sneaking", "The Grue has heard you! Although blind, he zeroes in on your position quickly.\nHis giant fists close around your head and pop your skull like an egg shell...");
+
             Chime Success = new Chime("Success", "Success", 2500);
             Chime Failure = new Chime("Failure", "Failure", 2500);
 
@@ -542,6 +559,8 @@ namespace CastleGrimtol.Project
 
             Bridge.Exits.Add("west", Cell);
             Bridge.Exits.Add("east", Crossroads);
+
+            Bridge.Items.Add(SlickShoes);
 
             Bridge.Hazards.Add("north", Fall);
             Bridge.Hazards.Add("south", Fall);
@@ -681,11 +700,13 @@ namespace CastleGrimtol.Project
             Maze12.Chimes.Add("south", Success);
             #endregion
 
-            Hallway.Exits.Add("east", GruChamber);
+            Hallway.Exits.Add("east", GrueChamber);
 
             Hallway.Items.Add(IronSword);
 
-            GruChamber.Exits.Add("north", ExitRoom);
+            GrueChamber.Exits.Add("north", ExitRoom);
+
+            GrueChamber.Enemies.Add(Grue);
 
             Rooms.Add("Cell", Cell);
             Rooms.Add("Bridge", Bridge);
@@ -699,7 +720,7 @@ namespace CastleGrimtol.Project
             // Add maze rooms to Rooms dictionary? Currently only needed to lock checks and there are no locks there...
 
             Rooms.Add("Hallway", Hallway);
-            Rooms.Add("Gru Chamber", GruChamber);
+            Rooms.Add("Grue Chamber", GrueChamber);
             Rooms.Add("Exit Room", ExitRoom);
 
         }
