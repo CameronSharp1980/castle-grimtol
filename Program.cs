@@ -22,11 +22,12 @@ namespace CastleGrimtol
 // FINISH THE HELP FUNCTION
 // ** Add riddles (Maze / passphrase door) 
 // ** Add enemies
-// Add attack method
+// ** Add attack method
 // ** Add sneak status toggle?
 
 // Optional To do:
 // Add combat (rpg turn based?)
+// Add enemy inventory that drops into room on death.
 // Add the ability to use items directly from the room? (Such as "use bed")
 // Add equipment for combat? (armor accessories etc. You already have "items" for use in attacking in a text adventure fashion)
 // Add events?

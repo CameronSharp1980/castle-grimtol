@@ -24,8 +24,7 @@ namespace CastleGrimtol.Project
         {
             if (item.Weapon)
             {
-                this.EquippedWeapon = item;
-                System.Console.WriteLine("Currently equipped: " + this.EquippedWeapon.Name);
+                this.EquipWeapon(item);
             }
             if (!Powers.ContainsKey(item.Power))
             {
@@ -33,16 +32,6 @@ namespace CastleGrimtol.Project
                 Console.WriteLine($"You can now use the {item.Power} ability!");
                 item.Uses--;
             }
-            // foreach (var CurrentPower in Powers)
-            // {
-            //     System.Console.WriteLine(item.Power);
-            //     System.Console.WriteLine(CurrentPower.Key);
-            //     System.Console.WriteLine(CurrentPower.Value);
-            //     if (CurrentPower.Key == item.Power)
-            //     {
-            //         Powers[item.Power] = true;
-            //     }
-            // }
         }
 
         public bool Speak(string passphrase, Room currentRoom)
@@ -104,6 +93,44 @@ namespace CastleGrimtol.Project
             {
                 Console.WriteLine("You lack that ability...");
             }
+        }
+
+        public void Attack(string enemyName, Room currentRoom)
+        {
+            Console.Clear();
+            if (enemyName == "empty")
+            {
+                Console.WriteLine("You must enter an enemy name with the \"attack\" command.");
+                return;
+            }
+
+            if (this.Status == "sneaking")
+            {
+                this.StatusCount = 0;
+                this.CheckStatus();
+            }
+
+            if (currentRoom.Enemies.Count > 0)
+            {
+                for (int i = 0; i < currentRoom.Enemies.Count; i++)
+                {
+                    Enemy currentEnemy = currentRoom.Enemies[i];
+                    if (currentEnemy.Name.ToLower() == enemyName.ToLower() && currentEnemy.Weakness == this.EquippedWeapon.Name)
+                    {
+                        Console.WriteLine($"You attack the {currentEnemy.Name} with your {this.EquippedWeapon.Name}!");
+                        currentEnemy.Death(currentRoom);
+                    }
+                }
+                if (currentRoom.Enemies.Count > 0)
+                {
+                    Console.WriteLine($"Your attack fails as there is no such enemy nearby... Perhaps you are seeing things in the darkness.");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Your attack fails as there is no such enemy nearby... Perhaps you are seeing things in the darkness.");
+            }
+
         }
 
         public void CheckStatus()

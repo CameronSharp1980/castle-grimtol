@@ -165,6 +165,10 @@ namespace CastleGrimtol.Project
         {
             Console.Clear();
             Console.WriteLine(CurrentRoom.Description);
+            for (int i = 0; i < CurrentRoom.Enemies.Count; i++)
+            {
+                Console.WriteLine(CurrentRoom.Enemies[i].InRoomDescription);
+            }
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
                 Console.WriteLine("You see " + CurrentRoom.Items[i].Description + " " + CurrentRoom.Items[i].ItemLocation);
@@ -254,7 +258,7 @@ namespace CastleGrimtol.Project
                 Command = CommandStringInput.ToLower();
                 CommandArg = "empty";
             }
-            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield") || CommandStringInput.ToLower().Contains("say") || CommandStringInput.ToLower().Contains("speak") || CommandStringInput.ToLower().Contains("sneak"))
+            else if (CommandStringInput.ToLower().Contains("go") || CommandStringInput.ToLower().Contains("take") || CommandStringInput.ToLower().Contains("use") || CommandStringInput.ToLower().Contains("look") || CommandStringInput.ToLower().Contains("help") || CommandStringInput.ToLower().Contains("quit") || CommandStringInput.ToLower().Contains("restart") || CommandStringInput.ToLower().Contains("inventory") || CommandStringInput.ToLower().Contains("yield") || CommandStringInput.ToLower().Contains("say") || CommandStringInput.ToLower().Contains("speak") || CommandStringInput.ToLower().Contains("sneak") || CommandStringInput.ToLower().Contains("attack"))
             {
                 Command = CommandStringInput.Remove(CommandStringInput.IndexOf(' '));
                 CommandArg = "empty";
@@ -286,6 +290,9 @@ namespace CastleGrimtol.Project
                     break;
                 case "take":
                     Take(CommandArr[1].ToLower());
+                    break;
+                case "attack":
+                    CurrentPlayer.Attack(CommandArr[1].ToLower(), CurrentRoom);
                     break;
                 case "inventory":
                     ViewInventory();
@@ -397,6 +404,11 @@ namespace CastleGrimtol.Project
                 Console.WriteLine("You must enter an item name with the \"take\" command.");
                 return;
             }
+            if (CurrentPlayer.Status == "sneaking")
+            {
+                CurrentPlayer.StatusCount = 0;
+                CurrentPlayer.CheckStatus();
+            }
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
                 if (CurrentRoom.Items[i].Name.ToLower() == Item.ToLower())
@@ -483,7 +495,7 @@ namespace CastleGrimtol.Project
                                         "In contrast to the rest of the cave, this room looks to have once known some comfort.\nYou see the remnants of a desk and chair.\nIt would appear this room was once occupied by the jailer.\nThe exit to the north is open. The exit to the west looks unstable.",
                                         "The confiners lair... Long abandoned... Something needed...");
             Room KonamiClueRoom = new Room("Konami Clue Room",
-                                            "You have entered a brightly-lit room with an exit to the northwest.\nTo the east, you see an ornate stone slab affixed into the wall.\nA large engraving on the northern wall states: \"To proceed east towards freedom, you must SPEAK the ancient words of \"No-clipping\".\nTo obtain these words, proceed northwest. \"",
+                                            "You have entered a brightly-lit room with an exit to the northwest.\nTo the east, you see an ornate stone slab affixed into the wall.\nA large engraving on the northern wall states:\n\"To proceed east towards freedom, you must SPEAK the ancient words of \"No-clipping\".\nTo obtain these words, proceed northwest. \"",
                                             "A maze... An enigma... Hearken to the chimes...");
             #region Konami Maze Rooms
             // Collection of nearly identical rooms comprising a maze whos exits conform to the "Konami code". 
@@ -531,7 +543,7 @@ namespace CastleGrimtol.Project
                                     "Journey's end... Freedom near... Hush...");
 
             Room GrueChamber = new Room("Grue Chamber",
-                                       "The stench is overwhemling! Something has died in this room... Perhaps many somethings...\nA portcullis has dropped before the western exit... There is no turning back!\nTo the north is an exit... If you can make it that far. Hulking before you is a Grue!",
+                                       "The stench is overwhemling! Something has died in this room... Perhaps many somethings...\nA portcullis has dropped before the western exit... There is no turning back!\nTo the north is an exit... If you can make it that far. Something has been living here!",
                                        "Danger... Hear your steps... Blind...");
 
             Room ExitRoom = new Room("Exit Room",
@@ -539,18 +551,20 @@ namespace CastleGrimtol.Project
                                      "Freedom... Take it...");
 
             Item BronzeKey = new Item("Bronze Key", "An old, Bronze Key", false, false, "You attempted to use the Bronze Key", "On a set of key hooks", "Crossroads North", true, 5, false, "none");
+            Item GoldenKey = new Item("Golden Key", "An ornate Golden Key, decorated with Gemstones.", false, false, "You attempted to use the Golden Key", "Hanging near the Exit", "Grue Chamber", true, 5, false, "none");
             Item SilverGoblet = new Item("Silver Goblet", "A shining silver goblet, filled with a viscous yellow fluid.", true, false, "You drank from the Silver Goblet", "On a Crystal dais in the center of the room.", "any", false, 1, false, "peer");
             Item SlickShoes = new Item("Slick Shoes", "A well worn pair of slick shoes with soft pads.", true, false, "You equipped the Slick Shoes", "worn by a dead adventurer next to the east exit...", "any", false, 1, false, "sneak");
             Item IronSword = new Item("Iron Sword", "An Iron Sword", true, true, "You equipped the Iron Sword", "Hanging in a decorative frame on the eastern wall", "any", true, 5000, true, "attack");
 
             Lock BronzeLock = new Lock("Bronze Lock", "Bronze Key", true);
+            Lock GoldenLock = new Lock("Golden Lock", "Golden Key", true);
 
             Lock KonamiLock = new Lock("Magic Passphrase", "idspispopd", true);
 
             Hazard Fall = new Hazard("Pit fall", "Pit fall", "Your misstep proves fatal as you fall to your death...", false);
             Hazard BoulderCrush = new Hazard("Boulder Crush", "Boulder Crush", "The walls give way as the timbers lining the cavern fail...\nYou are crushed below the earth...", false);
 
-            Enemy Grue = new Enemy("Grue", "sneaking", "The Grue has heard you! Although blind, he zeroes in on your position quickly.\nHis giant fists close around your head and pop your skull like an egg shell...");
+            Enemy Grue = new Enemy("Grue", "A grue hulks before you!", "sneaking", "The Grue has heard you! Although blind, he zeroes in on your position quickly.\nHis giant fists close around your head and pop your skull like an egg shell...", IronSword.Name);
 
             Chime Success = new Chime("Success", "Success", 2500);
             Chime Failure = new Chime("Failure", "Failure", 2500);
@@ -705,6 +719,10 @@ namespace CastleGrimtol.Project
             Hallway.Items.Add(IronSword);
 
             GrueChamber.Exits.Add("north", ExitRoom);
+
+            GrueChamber.Locks.Add("north", GoldenLock);
+
+            GrueChamber.Items.Add(GoldenKey);
 
             GrueChamber.Enemies.Add(Grue);
 
