@@ -19,24 +19,25 @@ namespace CastleGrimtol
 // ** Win conditions
 // ** Lose conditions
 // ** Lose conditions due to bad decisions
-// FINISH THE HELP FUNCTION
+// ** Finish the help function
 // ** Add riddles (Maze / passphrase door) 
 // ** Add enemies
 // ** Add attack method
 // ** Add sneak status toggle?
 
 // Optional To do:
-// Add combat (rpg turn based?)
+// Add additional combat (rpg turn based?)
 // Add enemy inventory that drops into room on death.
 // Add the ability to use items directly from the room? (Such as "use bed")
 // Add equipment for combat? (armor accessories etc. You already have "items" for use in attacking in a text adventure fashion)
 // Add events?
 // Add disquises?
 // Add puzzles? (Aside from your maze)
+// Add points / score?
 
 // Design:
-// Add colors and perhaps beeps
-// Add points / score?
+// Add colors
+// ** Add beeps
 
 // To consider:
 // **Currently if appropriate items are in your inventory, you are passing off to the Rooms use item method.
@@ -45,6 +46,3 @@ namespace CastleGrimtol
 // Clean up:
 // Separate room instantiation from exit and item (and other) instantiation? (generate rooms method)
 // Move methods to other classes (Sort them by where / what is using them)
-
-/******** START HERE!!! *********/
-// Attack method, Kill enemy, enemy drops item(s)

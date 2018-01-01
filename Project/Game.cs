@@ -207,7 +207,26 @@ namespace CastleGrimtol.Project
         private void Help()
         {
             Console.Clear();
-            Console.WriteLine("Implement help function here...");
+            Console.WriteLine("The following commands are available:\n");
+            Console.WriteLine("Simple commands:\n");
+            Console.WriteLine("help - Displays this help menu.");
+            Console.WriteLine("restart - Allows the player to restart the game.");
+            Console.WriteLine("yield - Allows the player to give up and restart the game.");
+            Console.WriteLine("quit - Allows the player to quit the game.");
+            Console.WriteLine("look - Displays description of current room.");
+            Console.WriteLine("inventory - Displays the player's current inventory");
+            Console.WriteLine();
+            Console.WriteLine("Compound commands:\n");
+            Console.WriteLine("go <Exit or Direction name> - The player will attempt to move in the specified direction.");
+            Console.WriteLine("take <Item Name> - The player will attempt to take an item from the current room.");
+            Console.WriteLine("use <Item name> -  Uses the specified item");
+            Console.WriteLine("say/speak <Words to speak> - The player will speak the specified phrase aloud.");
+            Console.WriteLine();
+            Console.WriteLine("Commands gained from items:\n");
+            Console.WriteLine("peer <Direction or exit name> - Allows the player to magically \"peer\" in the direction specified, sometimes providing a valuable clue.");
+            Console.WriteLine("sneak - After use, the player will move silently for a limited number of actions.");
+            Console.WriteLine("attack <Target> - The player will attempt to attack the specified target with the currenly equipped weapon. Must have a weapon to use.");
+            Console.WriteLine();
         }
 
         private void EndGame()
@@ -360,9 +379,6 @@ namespace CastleGrimtol.Project
                     return;
                 }
             }
-
-
-
 
             if (CurrentRoom.Locks.ContainsKey(Direction))
             {
