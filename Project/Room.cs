@@ -33,7 +33,11 @@ namespace CastleGrimtol.Project
                     {
                         lockToCheck.Value.Locked = false;
                         item.RequiredToProceed = false;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.BackgroundColor = ConsoleColor.Red;
                         Console.WriteLine($"You unlocked the {lockToCheck.Value.Name} with the {item.Name}");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.BackgroundColor = ConsoleColor.Black;
                     }
                 }
             }
@@ -46,11 +50,19 @@ namespace CastleGrimtol.Project
 
             if (item.Uses <= 0)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.BackgroundColor = ConsoleColor.White;
                 Console.WriteLine($"The {item.Name} broke apart in your hands after you used it.");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.BackgroundColor = ConsoleColor.Black;
             }
             else if (!item.Sturdy)
             {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.BackgroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"The {item.Name} appears old is noticably more worn after you used it...You should be careful lest it should break...");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.BackgroundColor = ConsoleColor.Black;
             }
 
         }

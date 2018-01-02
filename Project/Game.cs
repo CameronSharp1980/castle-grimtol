@@ -15,6 +15,11 @@ namespace CastleGrimtol.Project
 
         public void Setup()
         {
+
+            // Default console colors in case different than Windows default
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.BackgroundColor = ConsoleColor.Black;
+
             // Generate rooms and populate with exits, items etc.
             GenerateRooms();
 
@@ -30,8 +35,12 @@ namespace CastleGrimtol.Project
         public void Reset()
         {
             string ReallyRestart;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine();
             Console.WriteLine("Do you wish to restart the game?");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Enter \'Y\' for yes or \'N\' for no.");
+            Console.ForegroundColor = ConsoleColor.Gray;
             ReallyRestart = Console.ReadLine();
             if (ReallyRestart.ToLower() == "y" || ReallyRestart.ToLower() == "yes")
             {
@@ -44,7 +53,9 @@ namespace CastleGrimtol.Project
             {
                 if (CurrentPlayer.Dead)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Better luck next time...");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     return;
                 }
                 else
@@ -55,7 +66,9 @@ namespace CastleGrimtol.Project
             else
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("Please enter \'Y\' or'N\'");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Reset();
             }
         }
@@ -65,13 +78,18 @@ namespace CastleGrimtol.Project
             string[] Command;
 
             Console.Clear();
-            Console.WriteLine($"Welcome {CurrentPlayer.Name}!");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"I would bid you welcome, good {CurrentPlayer.Name}, were it not for the misfortune in which you have found yourself.\n");
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Your journey begins in a haze. You awaken to only darkness.");
             Console.WriteLine("You've no idea how you came to be here, or even where \"here\" is.");
             Console.WriteLine("What you do know however, is that you are in danger, and that you must escape...");
             Console.WriteLine("As your vision clears, you realize that you are in a prison cell built into a cave wall.");
             Console.WriteLine("The door is ajar and you appear to be alone.");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine();
             Console.WriteLine("Press enter to begin your quest...");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.ReadLine();
 
             Look();
@@ -99,9 +117,15 @@ namespace CastleGrimtol.Project
         private void DisplayTitleScreen()
         {
             Console.Clear();
-            Console.WriteLine("Welcome to \"The Pits of Despair\"");
+            Console.Write("Welcome to \"");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("The Pits of Despair");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write("\"\n");
             Console.WriteLine("A text adventure.");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Press Enter to start game");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.ReadLine();
         }
 
@@ -110,7 +134,9 @@ namespace CastleGrimtol.Project
             if (itemName == "empty")
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You must enter an item name with the \"use\" command.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 return;
             }
             for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
@@ -140,7 +166,9 @@ namespace CastleGrimtol.Project
                                         if (lockToCheck.Value.Type == CurrentPlayer.Inventory[i].Name && lockToCheck.Value.Locked)
                                         {
                                             Console.Clear();
+                                            Console.ForegroundColor = ConsoleColor.Red;
                                             Console.WriteLine($"After weeks of searching, you collapse in a heap as your strength fades...\nYou realize that the {CurrentPlayer.Inventory[i].Name} you broke weeks ago was essential to your escape... \nThe darkness takes you.");
+                                            Console.ForegroundColor = ConsoleColor.Gray;
                                             CurrentPlayer.Dead = true;
                                             Reset();
                                         }
@@ -157,22 +185,30 @@ namespace CastleGrimtol.Project
                 }
             }
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine($"You do not have any {itemName} in your inventory.");
+            Console.ForegroundColor = ConsoleColor.Gray;
 
         }
 
         private void Look()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(CurrentRoom.Description);
+            Console.ForegroundColor = ConsoleColor.Gray;
             for (int i = 0; i < CurrentRoom.Enemies.Count; i++)
             {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine(CurrentRoom.Enemies[i].InRoomDescription);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
             for (int i = 0; i < CurrentRoom.Items.Count; i++)
             {
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("You see " + CurrentRoom.Items[i].Description + " " + CurrentRoom.Items[i].ItemLocation);
             }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         private void Peer(string Direction)
@@ -180,59 +216,116 @@ namespace CastleGrimtol.Project
             Console.Clear();
             if (Direction == "empty")
             {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You must enter a direction with the \"peer\" command.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 return;
             }
             else if (CurrentPlayer.Powers.ContainsKey("peer"))
             {
                 if (CurrentRoom.Exits.ContainsKey(Direction))
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(CurrentRoom.Exits[Direction].PeerDetails);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
                 else if (CurrentRoom.Hazards.ContainsKey(Direction))
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine("Mists obscure your farsight... You must use your wits and senses...");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
                     Console.WriteLine("There is nothing to see in that direction...");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You lack that ability...");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
 
         private void Help()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.WriteLine("The following commands are available:\n");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Simple commands:\n");
-            Console.WriteLine("help - Displays this help menu.");
-            Console.WriteLine("restart - Allows the player to restart the game.");
-            Console.WriteLine("yield - Allows the player to give up and restart the game.");
-            Console.WriteLine("quit - Allows the player to quit the game.");
-            Console.WriteLine("look - Displays description of current room.");
-            Console.WriteLine("inventory - Displays the player's current inventory");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("help");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Displays this help menu.\n");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("restart");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Allows the player to restart the game.\n");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("yield");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Allows the player to give up and restart the game.\n");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("quit");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Allows the player to quit the game.\n");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("look");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Displays description of current room.\n");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("inventory");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Displays the player's current inventory\n");
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Compound commands:\n");
-            Console.WriteLine("go <Exit or Direction name> - The player will attempt to move in the specified direction.");
-            Console.WriteLine("take <Item Name> - The player will attempt to take an item from the current room.");
-            Console.WriteLine("use <Item name> -  Uses the specified item");
-            Console.WriteLine("say/speak <Words to speak> - The player will speak the specified phrase aloud.");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("go <Exit or Direction name>");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - The player will attempt to move in the specified direction.\n");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("take <Item Name>");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - The player will attempt to take an item from the current room.\n");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("use <Item name>");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" -  Uses the specified item\n");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write("say/speak <Words to speak>");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - The player will speak the specified phrase aloud.\n");
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Commands gained from items:\n");
-            Console.WriteLine("peer <Direction or exit name> - Allows the player to magically \"peer\" in the direction specified, sometimes providing a valuable clue.");
-            Console.WriteLine("sneak - After use, the player will move silently for a limited number of actions.");
-            Console.WriteLine("attack <Target> - The player will attempt to attack the specified target with the currenly equipped weapon. Must have a weapon to use.");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("peer <Direction or exit name>");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - Allows the player to magically \"peer\" in the direction specified, sometimes providing a valuable clue.\n");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("sneak");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - After use, the player will move silently for a limited number of actions.\n");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("attack <Target>");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" - The player will attempt to attack the specified target with the currenly equipped weapon. Must have a weapon to use.\n");
         }
 
         private void EndGame()
         {
             string ReallyQuit;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine();
             Console.WriteLine("Are you sure you want to quit?");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Enter \'Y\' for yes or \'N\' for no.");
+            Console.ForegroundColor = ConsoleColor.Gray;
             ReallyQuit = Console.ReadLine();
             if (ReallyQuit.ToLower() == "y" || ReallyQuit.ToLower() == "yes")
             {
@@ -245,15 +338,20 @@ namespace CastleGrimtol.Project
             else
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("Please enter \'Y\' or'N\'");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 EndGame();
             }
         }
 
         private void GiveUp()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine();
             Console.WriteLine("As dispair overwhelms you, you consider ending the torment yourself...");
-            Reset();
+            Console.ForegroundColor = ConsoleColor.Gray;
+            EndGame();
         }
 
         private string[] PromptUser()
@@ -264,7 +362,11 @@ namespace CastleGrimtol.Project
             string CommandArg;
 
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine("(Type \"help\" at any time for a list of commands)");
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write("What would you like to to?: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
             CommandStringInput = Console.ReadLine();
             // Parse to switch case later.(?) (Might not be able to?)
             if (CommandStringInput.Contains(" ") && CommandStringInput.IndexOf(" ") != CommandStringInput.Length - 1)
@@ -360,7 +462,9 @@ namespace CastleGrimtol.Project
             Console.Clear();
             if (Direction == "empty")
             {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You must enter a direction with the \"go\" command.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 return;
             }
 
@@ -374,7 +478,9 @@ namespace CastleGrimtol.Project
                 if (!CurrentRoom.Hazards[Direction].Nullified)
                 {
                     CurrentPlayer.Dead = true;
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(CurrentRoom.Hazards[Direction].DeathMessage);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     Reset();
                     return;
                 }
@@ -386,11 +492,15 @@ namespace CastleGrimtol.Project
                 {
                     if (CurrentRoom.Locks[Direction].Type.ToLower().Contains("key"))
                     {
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         Console.WriteLine($"The door is locked... The lock appears to fit a {CurrentRoom.Locks[Direction].Type}");
+                        Console.ForegroundColor = ConsoleColor.Gray;
                     }
                     else if (CurrentRoom.Locks[Direction].Name.ToLower().Contains("passphrase"))
                     {
+                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
                         Console.WriteLine($"You cannot pass this way... An inscription states that you must utter a {CurrentRoom.Locks[Direction].Name}");
+                        Console.ForegroundColor = ConsoleColor.Gray;
                     }
                 }
                 else if (CurrentRoom.Exits.ContainsKey(Direction))
@@ -406,7 +516,9 @@ namespace CastleGrimtol.Project
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You cannot go that way.");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
 
@@ -417,7 +529,9 @@ namespace CastleGrimtol.Project
             if (Item == "empty")
             {
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You must enter an item name with the \"take\" command.");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 return;
             }
             if (CurrentPlayer.Status == "sneaking")
@@ -433,7 +547,9 @@ namespace CastleGrimtol.Project
                     CurrentRoom.Items.RemoveAt(i);
                     ItemTaken = true;
                     Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine($"You took the {Item}.");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
             }
             if (!ItemTaken)
@@ -445,13 +561,17 @@ namespace CastleGrimtol.Project
                         if (CurrentPlayer.Inventory[i].Name.ToLower() == Item.ToLower())
                         {
                             Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
                             Console.WriteLine($"There is no {Item} in the room, but you have one in your inventory.");
+                            Console.ForegroundColor = ConsoleColor.Gray;
                             return;
                         }
                     }
                 }
                 Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine($"There are no {Item}s in the room for you to take.");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
 
         }
@@ -461,17 +581,21 @@ namespace CastleGrimtol.Project
             Console.Clear();
             if (CurrentPlayer.Inventory.Count > 0)
             {
-
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("You rummage through your pack and find the following items:");
                 for (int i = 0; i < CurrentPlayer.Inventory.Count; i++)
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine($"{i + 1}. {CurrentPlayer.Inventory[i].Name} : {CurrentPlayer.Inventory[i].Description}");
                 }
             }
             else
             {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("Your pack is empty...");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         private void GameGoodEnd()
@@ -762,7 +886,9 @@ namespace CastleGrimtol.Project
         private void GeneratePlayer()
         {
             string PlayerName;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write("Please enter a name for our hero: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
             PlayerName = Console.ReadLine();
             CurrentPlayer = new Player(PlayerName);
             CurrentRoom = Rooms["Cell"];
